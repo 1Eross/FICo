@@ -13,10 +13,6 @@ export const menuData: IMenuItem[] = [
     iconName: 'sliders'
 },
 {
-    path: "Statistics",
-    iconName: 'bar-chart-2'
-},
-{
     path: "Profile",
     iconName: 'user'
 }
