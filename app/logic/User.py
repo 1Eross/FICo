@@ -1,9 +1,12 @@
+import sys
+sys.path.append("C:/Users/user/Documents/GitHub/FICo")
 from common.db.database import Database
 
 
 testDB = Database()
 testDB.connect()
 
+#Юнит тесты написать к каждой функции 
 class UserAccount:
     def __init__(self, name, phoneNumber, emailAddress, login, password, token, bankAccountID) -> None:
         self.name = name
