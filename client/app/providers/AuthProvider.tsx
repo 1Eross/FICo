@@ -15,7 +15,7 @@ export const AuthContext = createContext({} as IContext)
 let ignore = Splash.preventAutoHideAsync()
 
 const AuthProvider: FC<PropsWithChildren<unknown>> = ({children}) => {
-    const [user, setUser] = useState<TypeUserState>({} as IUser)
+    const [user, setUser] = useState<TypeUserState>(null)
 
     useEffect(()=> {
         let isMounted = false
