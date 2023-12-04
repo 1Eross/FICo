@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from enum import Enum
-import uvicorn
+import sys
+sys.path.append('C:/Users/gripo/PycharmProjects/FiCo')
+from app.logic.User import UserAccount
 
 app = FastAPI()
 
@@ -40,12 +42,16 @@ async def read_item(my_key: int):
 # #Querry tools
 # #
 
-# fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 
-# #get with args
-# @app.get("/foo4/")
-# async def read_item(skip: int = 0, limit: int = 10):
-#     return fake_db[skip : skip + limit]
+#get with args ## http://127.0.0.1:8002/authorization?user_login=something&password=something
+@app.get("/authorization")
+async def read_item(user_login: str, user_password: str):
+    isInDB = UserAccount.Authorization(user_login=user_login, user_password=user_password)
+    if isInDB:
+        return {"Message": "Auth Succesful"}
+    else:
+        return {"Message": "User not found"}
 
 # #get with additional params
 # @app.get("/foo5/{item_id}")

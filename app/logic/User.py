@@ -1,8 +1,6 @@
 from common.db.database import Database
 
 
-testDB = Database()
-testDB.connect()
 
 class UserAccount:
     def __init__(self, name, phoneNumber, emailAddress, login, password, token, bankAccountID) -> None:
@@ -16,10 +14,14 @@ class UserAccount:
         
     @staticmethod
     def Authorization (user_login: str, user_password: str) -> bool:
-       if Database.read_records(testDB.read_records(Database.getUser(user_login, user_password))):
+        testDB = Database(dbname="postgres", user="postgres", password="admin", host="localhost", port="5432")
+        testDB.connect()
+        if Database.read_records(testDB.read_records(Database.getUser(user_login, user_password))):
            return True
-       else:
+        else:
            return False
+       
+       
     @staticmethod
     def Registration (userName: str, userPhoneNumber: str, userEmailAddress: str, userLogin: str, userPassword: str) -> bool:
         #мэйби всё вынести в отедельные функции в отдельный класс и импортировать и тогда проще будет 
