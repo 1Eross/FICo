@@ -72,4 +72,9 @@ class Database:
             self.commit()
             cursor.close()
 
-            
+
+    def getUser(user_login: str, user_password: str) -> str:
+        sqlQuerry = f"SELECT * FROM \"FICoReg\".user_data\
+                        WHERE user_login = '{user_login}' and user_password = '{user_password}'\
+                        ORDER BY id ASC"
+        return sqlQuerry
