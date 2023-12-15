@@ -1,13 +1,9 @@
 import sys
 sys.path.append("C:/Users/user/Documents/GitHub/FICo")
-from common.db.database import Database
-
-
-testDB = Database()
-testDB.connect()
+from common.db.db1 import *
 
 #Юнит тесты написать к каждой функции 
-class UserAccount:
+class userAccount:
     def __init__(self, name, phoneNumber, emailAddress, login, password, token, bankAccountID) -> None:
         self.name = name
         self.phoneNumber = phoneNumber
@@ -19,42 +15,22 @@ class UserAccount:
         
     @staticmethod
     def Authorization (user_login: str, user_password: str) -> bool:
-       if Database.read_records(testDB.read_records(Database.getUser(user_login, user_password))):
-           return True
-       else:
-           return False
-    @staticmethod
-    def Registration (userName: str, userPhoneNumber: str, userEmailAddress: str, userLogin: str, userPassword: str) -> bool:
-        return True
-        #мэйби всё вынести в отедельные функции в отдельный класс и импортировать и тогда проще будет 
-        if userName == "":
+        result = dataBase.findUser(user_login, user_password)
+        if len(result) == 0:
             return False
-        if userPhoneNumber.count != 11:
-            return False
-        if userEmailAddress.__contains__("@mail.ru") == False:
-            return False
-        if userLogin.count < 8 or userLogin.count > 20: #сделать проверку на минимум одно число, минимум один символ, отсутствие запрещённых символов, проверить в бд есть ли такие логины
-            return False
-        if userPassword.count < 8 or userPassword.count > 20: #сделать проверку на минимум одно число, минимум один символ, отсутствие запрещённых символов
-            return False
+        else:
+            return True
         
-        return True
-    
+    @staticmethod
+    def Registration (userLogin: str, userPassword: str) -> bool:
+        result = dataBase.findUser(userLogin, userPassword)
+        if len(result) == 0:
+            dataBase.addUser(userLogin, userPassword)
+            return True
+        else:
+            return False
     @staticmethod
     def EditPersonalData (tmp: str, data: str) -> bool:
-        if tmp == "name":
-            pass
-            #проверка на коректность data
-        elif tmp == "password":
-            pass
-            #проверка на коректность data
-        elif tmp == "login":
-            pass
-        elif tmp == "phoneNumber":
-            pass
-        elif tmp == "emailAddress":
-            pass
-        return True
+        pass
     
-    
-    #print(Registration("Biba", "89098959772", "maremyanov05@mail.ru", "12345678", "87654321"))
+userAccount.Registration("syka", "bliat")
