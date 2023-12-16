@@ -14,21 +14,21 @@ class userAccount:
         self.bankAccountID = bankAccountID #мы договаривались что это будет список, может надо либо полность убрать либо оставить как пустой список 
         
     @staticmethod
-    def Authorization (user_login: str, user_password: str) -> bool:
+    def Authorization (user_login: str, user_password: str) -> str:
         result = dataBase.findUser(user_login, user_password)
         if len(result) == 0:
-            return False
+            return "User is not found"
         else:
-            return True
+            return "user found"
         
     @staticmethod
-    def Registration (userLogin: str, userPassword: str) -> bool:
+    def Registration (userLogin: str, userPassword: str) -> str:
         result = dataBase.findUser(userLogin, userPassword)
         if len(result) == 0:
-            dataBase.addUser(userLogin, userPassword)
-            return True
+            dataBase.addNewUser(userLogin, userPassword)
+            return "user has been successfully registered"
         else:
-            return False
+            return "this user is already registered"
     @staticmethod
     def EditPersonalData (tmp: str, data: str) -> bool:
         pass
