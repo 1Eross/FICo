@@ -1,80 +1,344 @@
 import psycopg2
-from psycopg2 import Error
+from datetime import datetime
 
-class Database:
+self_db_password = "#M135246i#"
+
+class dataBase:
+    #Подумать над передачей файлов (скорее всего json)
+    #Чтобы код работал, надо поменять пароль во всех функциях 
     
-    def __init__(self, dbname, user, password, host, port) -> None:
-        self.dbname = dbname
-        self.user = user
-        self.password = password
-        self.host = host
-        self.port = port
-        self.connection = None
-        
-    
-    def connect(self) -> bool:
+    @staticmethod #работает
+    def find_user (login: str, password: str) -> list[tuple]: #поиск пользователя в таблице
+        conn = None
+        cur = None
         try:
-            self.connection = psycopg2.connect(dbname=self.dbname,
-                                      user=self.user,
-                                      password=self.password,
-                                      host=self.host,
-                                      port=self.port)
-            return True
-        except (Error) as error:
-            #log has been needed
+            conn = psycopg2.connect(
+                database="FICo",
+                user="postgres",
+                password=self_db_password,
+                host="localhost",
+                port=5432)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM user_account WHERE user_login = '{login}' AND user_password = '{password}'")
+            result = cur.fetchall()
+        
+        except psycopg2.Error as e:
+            pass #logoutput
+            return None
+        finally:    
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return result
+    
+    @staticmethod #работает
+    def add_new_user (login: str, password: str) -> bool: #добавление нового пользователя
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+                database="FICo",
+                user="postgres",
+                password=self_db_password,
+                host="localhost",
+                port=5432)
+            cur = conn.cursor()
+
+            cur.execute(f"INSERT INTO user_account (user_login, user_password) VALUES ('{login}', '{password}')")
+            conn.commit()
+            
+        except psycopg2.Error as e:
+            #logOutputError
+            print(e)
             return False
         
-    def disconnect(self):
-        if self.connection:
-            self.connection.close()
-            self.connection = None
-
-    def execute_query(self, query, params=None):
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, params)
-            return cursor
-        except (Error) as error:
-            #log has been needed
-            return None
+        finally:            
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+            #log output
         
-    def rollback(self):
-        if self.connection:
-            self.connection.rollback()
+    @staticmethod #
+    def add_new_operation (user_id: int, account_id: int, #добавление новой операции 
+                           category_id: int, currency_id: int,
+                           is_incoming: bool, amount: int,
+                           operation_date: str,  description: str) -> bool: ##Может возвращает id созданной операции ?
+        
+        timestamp_value = datetime.strptime(operation_date, "%Y-%m-%d %H:%M:%S")
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"""INSERT INTO operation
+                        (account_id, user_id, category_id, currency_id, incoming, amount, operation_date, description) 
+                        VALUES ({account_id}, {user_id}, {category_id}, {currency_id}, {is_incoming}, {amount}, '{timestamp_value}', '{description}')""")
+                        #Может быть ошибка в связи с передачей timestamp_value
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            pass
+            #log output
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+            
+    @staticmethod #
+    def get_all_operations (user_id: int, account_id: int) -> list[tuple]: #получение все операций пользователя
+        conn = None
+        cur = None
+        try:  
+            conn = psycopg2.connect(
+                    database="FICo",
+                    user="postgres",
+                    password=self_db_password,
+                    host="localhost",
+                    port=5432)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM operation WHERE user_id = {user_id} AND account_id = {account_id}")
+            result = cur.fetchall()
+        except psycopg2.Error as e:
+            pass #logoutput
+            return None
+        finally:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+            return result
+    @staticmethod #работает
+    def add_new_bank_account (user_id: int, balance: int, currency_id: int, account_name: str) -> bool: #добавление нового кошелька у пользователя
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"""INSERT INTO bank_account 
+                        (user_id, balance, currency_id, account_name) 
+                        VALUES ({user_id}, {balance}, {currency_id}, '{account_name}')""")
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            #log output
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+                #наверно ретурн тру или фолс
+    
+    @staticmethod #
+    def edit_personal_data (user_id: int, name_column: str, data: str,) -> bool:
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"UPRDATE user_account SET '{name_column}' = '{data}' WHERE useraccount_id = {user_id}")
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            pass
+            #log output
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+                #наверно ретурн тру или фолс
+            return True
+    
+    @staticmethod #
+    def get_all_personal_data (user_id: int) -> list[tuple]:
+        conn = None
+        cur = None
+        try:  
+            conn = psycopg2.connect(
+                    database="FICo",
+                    user="postgres",
+                    password=self_db_password,
+                    host="localhost",
+                    port=5432)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM user_account WHERE useraccount_id = {user_id}")
+            result = cur.fetchall()
+        except psycopg2.Error as e:
+            pass #logoutput
+            return None
+        finally:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+            return result
+    
+    @staticmethod #
+    def add_new_category (user_id: int, category_name: str, description: str) -> bool:
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"""INSERT INTO user_category
+                        (user_id, category_name, description) 
+                        VALUES ({user_id}, '{category_name}', '{description}')""")
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            pass
+            return False
+            #log output
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+                #наверно ретурн тру или фолс
+    
+    @staticmethod #
+    def find_category () -> None:
+        pass
+    
+    @staticmethod #
+    def delete_opereation (operation_id: int) -> bool: #удаление оперделённой операции 
+        #id операции есть на фронте, поэтому норм 
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"DELETE FROM operation WHERE operation_id = {operation_id}")
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            pass
+            return False
+            #log output
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+                #наверно ретурн тру или фолс
+    
+    @staticmethod #
+    def delete_bank_account (bank_account_id: int) -> bool: #удаление кошелька пользователя
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"DELETE FROM operation WHERE account_id = {bank_account_id}") #удаление всех операций в этом кошельке
+            conn.commit()
+            cur.execute(f"DELETE FROM bank_account WHERE bank_account_id = {bank_account_id}") #удаление кошелька пользователя
+            conn.commit()
+        except psycopg2.Error as e:
+            pass
+            #log output
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+                #наверно ретурн тру или фолс
+    
+    @staticmethod #
+    def edit_operation (operation_id: int, name_column: str, data: str,) -> bool: #редактирование операции
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            if (name_column == "incoming" or name_column == "amount"): #когда bool в дб нам надо кавычки ставить? 
+                cur.execute(f"UPRDATE operation SET '{name_column}' = {data} WHERE operation_id = {operation_id}")
+            else:
+                cur.execute(f"UPRDATE operation SET '{name_column}' = '{data}' WHERE operation_id = {operation_id}")
 
-    def commit(self):
-        if self.connection:
-            self.connection.commit()
-
-    ##CRUD operations
-
-    def create_record(self, query, params):
-        cursor = self.execute_query(query, params)
-        if cursor:
-            self.commit()
-            cursor.close()
-
-    def read_records(self, query, params=None):
-        cursor = self.execute_query(query, params)
-        if cursor:
-            records = cursor.fetchall()
-            return records
-
-    def update_record(self, query, params):
-        cursor = self.execute_query(query, params)
-        if cursor:
-            self.commit()
-            cursor.close()
-
-    def delete_record(self, query, params):
-        cursor  = self.execute_query()
-        if cursor:
-            self.commit()
-            cursor.close()
-
-
-    def getUser(user_login: str, user_password: str) -> str:
-        sqlQuerry = f"SELECT * FROM \"FICoReg\".user_data\
-                        WHERE user_login = '{user_login}' and user_password = '{user_password}'\
-                        ORDER BY id ASC"
-        return sqlQuerry
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            pass
+            #log output
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+        
+    #функция добавления новой валюты?
+    #функции удаления пользователя, операции, счёта, валюты и т.д?
+    #функция редактирования данных у пользователя (непонятно как её сделать, как понять что человек на фронте поменял)
+    #функции редактирования других данных, нужны ли? 
+    #

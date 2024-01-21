@@ -1,6 +1,6 @@
 import sys
 sys.path.append('C:/Users/gripo/PycharmProjects/FiCo')
-from common.db.db1 import *
+from common.db.database import *
 
 if __name__ == "__main__":
     # Создаем объекты QueryBuilder и PostgresConnector

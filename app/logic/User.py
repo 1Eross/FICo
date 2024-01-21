@@ -1,6 +1,5 @@
 import sys
-sys.path.append("C:/Users/user/Documents/GitHub/FICo")
-from common.db.db1 import *
+from common.db.database import dataBase
 
 #Юнит тесты написать к каждой функции 
 class userAccount:
@@ -15,7 +14,7 @@ class userAccount:
         
     @staticmethod
     def Authorization (user_login: str, user_password: str) -> str:
-        result = dataBase.findUser(user_login, user_password)
+        result = dataBase.find_user(user_login, user_password)
         if len(result) == 0:
             return "User is not found"
         else:

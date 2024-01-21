@@ -1,0 +1,10 @@
+{
+    "useraccount_id": 123, 
+    "user_login": "test_login",
+    "user_password": "test_password",
+    "email": "email",
+    "phone": "phone",
+    "user_name": "test_FName_LName",
+    "user_token": "testToken",
+    "user_status": "test_status"
+}

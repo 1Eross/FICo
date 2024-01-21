@@ -1,0 +1,11 @@
+{
+    "operation_id": 123,
+    "account_id": 123,
+    "user_id": 123,
+    "category_id": 123,
+    "currency_id": 123,
+    "is_incoming": true,
+    "amount": 123,
+    "operation_date": "1970-01-01 00:00:00",
+    "description": "test_text"
+}
