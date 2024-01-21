@@ -1,4 +1,5 @@
 import psycopg2
+import logging
 
 class BankAccount:
     def __init__(self, bankAccountID, balance, currency, userID: int):
@@ -42,7 +43,7 @@ class BankAccount:
             cursor.execute(query, (self._balance, self._currency, self._userID, self._bankAccountID))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок в лог
+            logging.error(f"Error setting bank account: {e}")
             pass
         finally:
             cursor.close()
@@ -68,7 +69,7 @@ class BankAccount:
             else:
                 raise ValueError("Bank account not found")
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error getting bank account: {e}")
             pass
         finally:
             cursor.close()
@@ -100,7 +101,7 @@ class BankAccount:
             connection.commit()
             return new_category_id
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error adding  new category: {e}")
             pass
         finally:
             cursor.close()
@@ -123,7 +124,7 @@ class BankAccount:
             connection.commit()
             return new_operation_id
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error adding new operation: {e}")
             pass
         finally:
             cursor.close()
@@ -144,7 +145,7 @@ class BankAccount:
             cursor.execute(query, (self._bankAccountID,))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error deleting bank account: {e}")
             pass
         finally:
             cursor.close()

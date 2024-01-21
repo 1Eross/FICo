@@ -1,4 +1,5 @@
 import psycopg2
+import logging
 
 class Operation:
     def __init__(self, operationID, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
@@ -72,7 +73,7 @@ class Operation:
             cursor.execute(query, (self._operation_date, self._amount, self._category_id, self._account_id, self._description, self._user_id, self._operationID, self._currency_id))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error setting operation: {e}")
             pass
         finally:
             cursor.close()
@@ -93,7 +94,7 @@ class Operation:
             cursor.execute(query, (self._operationID,))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error deleting operation: {e}")
             pass
         finally:
             cursor.close()
@@ -151,7 +152,7 @@ class Operation:
             cursor.execute(query, (self._operation_date, self._amount, self._category_id, self._account_id, self._description, self._user_id, self._operationID))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error editing operation: {e}")
             pass
         finally:
             cursor.close()

@@ -1,4 +1,5 @@
 import psycopg2
+import logging
 
 class Category:
     def __init__(self, categoryID, icon, name):
@@ -36,7 +37,7 @@ class Category:
             cursor.execute(query, (self._icon, self._name, self._categoryID))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error setting category: {e}")
             pass
         finally:
             cursor.close()
@@ -57,7 +58,7 @@ class Category:
             cursor.execute(query, (self._categoryID,))
             connection.commit()
         except psycopg2.Error as e:
-            # Обработка ошибок
+            logging.error(f"Error deleting category: {e}")
             pass
         finally:
             cursor.close()
