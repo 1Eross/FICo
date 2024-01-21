@@ -1,4 +1,5 @@
 import psycopg2
+import logging
 from datetime import datetime
 
 self_db_password = "#M135246i#"
@@ -88,7 +89,7 @@ class dataBase:
         
         except psycopg2.Error as e:
             pass
-            #log output
+            logging.error(f"Error adding operation: {e}")
             return False
         
         finally:
@@ -141,6 +142,7 @@ class dataBase:
             conn.commit()
         
         except psycopg2.Error as e:
+            logging.error(f"Error setting bank account: {e}")
             #log output
             return False
         
@@ -226,6 +228,7 @@ class dataBase:
             conn.commit()
         
         except psycopg2.Error as e:
+            logging.error(f"Error adding  new category: {e}")
             pass
             return False
             #log output
@@ -243,7 +246,7 @@ class dataBase:
         pass
     
     @staticmethod #
-    def delete_opereation (operation_id: int) -> bool: #удаление оперделённой операции 
+    def delete_operation (operation_id: int) -> bool: #удаление оперделённой операции 
         #id операции есть на фронте, поэтому норм 
         conn = None
         cur = None
@@ -261,6 +264,39 @@ class dataBase:
             conn.commit()
         
         except psycopg2.Error as e:
+            logging.error(f"Error deleting operation: {e}")
+            pass
+            return False
+            #log output
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+            return True
+                #наверно ретурн тру или фолс
+        
+    @staticmethod #
+    def delete_category (category_id: int) -> bool: #удаление оперделённой операции 
+        #id категории есть на фронте, поэтому норм 
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"DELETE FROM general_category WHERE category_id = {category_id}")
+            conn.commit()
+        
+        except psycopg2.Error as e:
+            logging.error(f"Error deleting category: {e}")
             pass
             return False
             #log output
@@ -326,6 +362,7 @@ class dataBase:
             conn.commit()
         
         except psycopg2.Error as e:
+            logging.error(f"Error editing operation: {e}")
             pass
             #log output
             return False

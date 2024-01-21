@@ -1,18 +1,19 @@
-import psycopg2
 import logging
+from common.db.database import dataBase
 
 logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
 
+
 class BankAccount:
-    def __init__(self, bankAccountID, balance, currency, userID: int):
-        self._bankAccountID = bankAccountID
+    def __init__(self, account_id, balance, currency, userID: int):
+        self._account_id = account_id
         self._balance = balance
         self._currency = currency
         self._userID = userID
 
     @property
-    def bankAccountID(self):
-        return self._bankAccountID
+    def account_id(self):
+        return self._account_id
 
     @property
     def balance(self):
@@ -26,131 +27,52 @@ class BankAccount:
     def userID(self):
         return self._userID
 
-    def setBankAccountInfo(self, balance, currency, userID):
-        self._balance = balance
-        self._currency = currency
-        self._userID = userID
+    def account_id(self, new_account_id):
+        is_updated = dataBase.edit_bank_data(self.id, name_column='account_id', data=new_account_id)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"Account ID updated successfully to {new_account_id}")
+            self._account_id = new_account_id
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update Account ID to {new_account_id}")
+            return False
 
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
+    def balance(self, new_balance):
+        is_updated = dataBase.edit_bank_data(self.id, name_column='balance', data=new_balance)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"Balance updated successfully to {new_balance}")
+            self._balance = new_balance
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update Balance to {new_balance}")
+            return False
 
-        try:
-            query = "UPDATE bank_accounts SET balance = %s, currency = %s, userID = %s WHERE bankAccountID = %s;"
-            cursor.execute(query, (self._balance, self._currency, self._userID, self._bankAccountID))
-            connection.commit()
-        except psycopg2.Error as e:
-            logging.error(f"Error setting bank account: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
-    def getBankAccountInfo(self):
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "SELECT balance, currency, userID FROM bank_accounts WHERE bankAccountID = %s;"
-            cursor.execute(query, (self._bankAccountID,))
-            result = cursor.fetchone()
-
-            if result:
-                self._balance, self._currency, self._userID = result
+    def currency(self, new_currency):
+            is_updated = dataBase.edit_bank_data(self.id, name_column='currency', data=new_currency)
+            if is_updated:
+                # Логирование успешного обновления
+                logging.info(f"Currency updated successfully to {new_currency}")
+                self._currency = new_currency
+                return True
             else:
-                raise ValueError("Bank account not found")
-        except psycopg2.Error as e:
-            logging.error(f"Error getting bank account: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
+                # Логирование неудачного обновления
+                logging.error(f"Failed to update Currency to {new_currency}")
+                return False
+    
+    def userID(self, new_userID):
+        is_updated = dataBase.edit_bank_data(self.id, name_column='user_id', data=new_userID)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"User ID updated successfully to {new_userID}")
+            self._userID = new_userID
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update User ID to {new_userID}")
+            return False
 
-    def setBalance(self, balance):
-        self.setBankAccountInfo(balance, self._currency, self._userID)
-
-    def setCurrency(self, currency):
-        self.setBankAccountInfo(self._balance, currency, self._userID)
-
-    def setUserID(self, userID):
-        self.setBankAccountInfo(self._balance, self._currency, userID)
-
-    def add_new_category(self, category):
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "INSERT INTO categories (categoryID, icon, name) VALUES (%s, %s, %s) RETURNING categoryID;"
-            cursor.execute(query, (category.categoryID, category.icon, category.name))
-            new_category_id = cursor.fetchone()[0]
-            connection.commit()
-            return new_category_id
-        except psycopg2.Error as e:
-            logging.error(f"Error adding  new category: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
-    def add_new_operation(self, operation):
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "INSERT INTO operations (operationID, date, amount, categoryID, bankAccountID, description, userID) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING operationID;"
-            cursor.execute(query, (operation.operationID, operation.date, operation.amount, operation.categoryID, operation.bankAccountID, operation.description, operation.userID))
-            new_operation_id = cursor.fetchone()[0]
-            connection.commit()
-            return new_operation_id
-        except psycopg2.Error as e:
-            logging.error(f"Error adding new operation: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
-    def delete(self):
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "DELETE FROM bank_accounts WHERE bankAccountID = %s;"
-            cursor.execute(query, (self._bankAccountID,))
-            connection.commit()
-        except psycopg2.Error as e:
-            logging.error(f"Error deleting bank account: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
-
+  

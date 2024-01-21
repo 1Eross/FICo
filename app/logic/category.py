@@ -1,68 +1,57 @@
-import psycopg2
 import logging
-
 logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+from common.db.database import dataBase
 
 class Category:
-    def __init__(self, categoryID, icon, name):
-        self._categoryID = categoryID
+    def __init__(self, category_id, icon, name):
+        self._category_id = category_id
         self._icon = icon
         self._name = name
 
     @property
-    def categoryID(self):
-        return self._categoryID
+    def category_id(self):
+        return self._category_id
+
+    def category_id(self, new_category_id):
+        is_updated = dataBase.edit_category(self.id, name_column='category_id', data=new_category_id)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"Category ID updated successfully to {new_category_id}")
+            self._category_id = new_category_id
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update Category ID to {new_category_id}")
+            return False
 
     @property
     def icon(self):
         return self._icon
 
+    def icon(self, new_icon):
+        is_updated = dataBase.edit_category(self.id, name_column='icon', data=new_icon)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"Icon updated successfully to {new_icon}")
+            self._icon = new_icon
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update Icon to {new_icon}")
+            return False
+
     @property
     def name(self):
         return self._name
 
-    def setCategoryInfo(self, icon, name):
-        self._icon = icon
-        self._name = name
-
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "UPDATE categories SET icon = %s, name = %s WHERE categoryID = %s;"
-            cursor.execute(query, (self._icon, self._name, self._categoryID))
-            connection.commit()
-        except psycopg2.Error as e:
-            logging.error(f"Error setting category: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
-    def delete(self):
-        connection = psycopg2.connect(
-            dbname="FICo",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port=5432
-        )
-        cursor = connection.cursor()
-
-        try:
-            query = "DELETE FROM categories WHERE categoryID = %s;"
-            cursor.execute(query, (self._categoryID,))
-            connection.commit()
-        except psycopg2.Error as e:
-            logging.error(f"Error deleting category: {e}")
-            pass
-        finally:
-            cursor.close()
-            connection.close()
-
+    def name(self, new_name):
+        is_updated = dataBase.edit_category(self.id, name_column='name', data=new_name)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"Name updated successfully to {new_name}")
+            self._name = new_name
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update Name to {new_name}")
+            return False
