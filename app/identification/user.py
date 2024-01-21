@@ -14,6 +14,7 @@ class User:
         self.status = status
     
     def setNewLogin(self, NewLogin: str):
+        #database call
         self.login = NewLogin
                 
     
