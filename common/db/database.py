@@ -1,6 +1,9 @@
 import psycopg2
 from datetime import datetime
 
+
+password = "admin"
+
 class dataBase:
     #Подумать над передачей файлов (скорее всего json)
     @staticmethod
