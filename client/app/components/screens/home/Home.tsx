@@ -40,7 +40,7 @@ const Home: FC = () => {
                             Добавление траты
                         </Text>
                     </View>
-                    <View style={styles.ModalText}>
+                    <View style={styles.ModalFormik}>
                         <Form addCard={addCard}/>
                     </View>
                     <View style={styles.ModalButtons}>
@@ -81,7 +81,6 @@ const Home: FC = () => {
                         </View>
                     </View>
                 )}
-                // dellCard={dellCard}
                 style={styles.List}>
                 </FlatList>
             </View>
@@ -129,18 +128,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    ModalText: {
+        backgroundColor: '#1c1c2e',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30,
+    },
+    ModalFormik: {
+        width: '51%',
+    },
     ModalButtons: {
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
         // flexDirection: 'row',
         // marginTop: 30,
-    },
-    ModalText: {
-        backgroundColor: '#1c1c2e',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 30,
     },
 
 
