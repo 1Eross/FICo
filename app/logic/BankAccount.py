@@ -3,7 +3,6 @@ from common.db.database import dataBase
 
 logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
 
-
 class BankAccount:
     def __init__(self, account_id, balance, currency, userID: int):
         self._account_id = account_id
@@ -26,7 +25,8 @@ class BankAccount:
     @property
     def userID(self):
         return self._userID
-
+    
+    @account_id.setter
     def account_id(self, new_account_id):
         is_updated = dataBase.edit_bank_data(self.id, name_column='account_id', data=new_account_id)
         if is_updated:
@@ -38,7 +38,8 @@ class BankAccount:
             # Логирование неудачного обновления
             logging.error(f"Failed to update Account ID to {new_account_id}")
             return False
-
+    
+    @balance.setter
     def balance(self, new_balance):
         is_updated = dataBase.edit_bank_data(self.id, name_column='balance', data=new_balance)
         if is_updated:
@@ -50,7 +51,8 @@ class BankAccount:
             # Логирование неудачного обновления
             logging.error(f"Failed to update Balance to {new_balance}")
             return False
-
+    
+    @currency.setter
     def currency(self, new_currency):
             is_updated = dataBase.edit_bank_data(self.id, name_column='currency', data=new_currency)
             if is_updated:
@@ -63,6 +65,7 @@ class BankAccount:
                 logging.error(f"Failed to update Currency to {new_currency}")
                 return False
     
+    @userID.setter
     def userID(self, new_userID):
         is_updated = dataBase.edit_bank_data(self.id, name_column='user_id', data=new_userID)
         if is_updated:

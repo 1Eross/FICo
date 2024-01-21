@@ -8,6 +8,7 @@ sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
 from common.errors.errors import UserExistsError
 from common.errors.errors import UserNotFoundError
+from common.errors.errors import UserDeletionError
 
 from typing import Optional
 
@@ -158,10 +159,10 @@ class User:
         user_data = dataBase.find_user(login, password)
         if user_data:
             logging.info(f"User with id {user_data[0]} found seccesfully {user_data}")
-            return User(id=user_data[0], login=user_data[1],
-                        password=user_data[2], email=user_data[3],
-                        phoneNumber=user_data[4], FNameLName=user_data[5],
-                        token=user_data[6], status=user_data[6])
+            return User(id=user_data[0][0], login=user_data[0][1],
+                        password=user_data[0][2], email=user_data[0][3],
+                        phoneNumber=user_data[0][4], FNameLName=user_data[0][5],
+                        token=user_data[0][6], status=user_data[0][6])
         else:
             logging.error(f"User with params (login={login}, password={password}) not exists")
             raise UserNotFoundError(f"User with params (login={login}, password={password}) not exists")
@@ -172,19 +173,22 @@ class User:
                    email: str | None, phoneNumber: str | None,
                    FNameLName: str | None, token: str | None,
                    status: str | None) -> bool:
-        # user = dataBase.
+        user = dataBase.find_user_in_database_by_login(login)
         if user:
             logging.error(f"Create user attempt failed: User with (login={login}) allready exists")
-            #Отправка ошибки клиенту - пользователь существует
-            raise UserExistsError("User allready exists")
+            raise UserExistsError(f"Create user attempt failed: User with (login={login}) allready exists")
         else:
-            logging.info(f"User successfully created with params")
+            logging.info(f"User successfully created with params ({login, password, email, phoneNumber, FNameLName, token, status})")
             dataBase.add_new_user(login, password, email, phoneNumber, FNameLName, token, status)
             
-            
-            
-    
+    ##Выйти из сессии при удалении пользователя
     @staticmethod
-    def deleteUser():
-        pass
+    def deleteUser(user_id: int) -> bool:
+        is_deleted = dataBase.delete_user(user_id)
+        if is_deleted:
+            logging.info(f"User (id={user_id}) deleted successfully")
+            return True
+        else:
+            logging.error(f"Delete user attempt failed with params (id={user_id})")
+            raise UserDeletionError(f"Delete user attempt failed with params (id={user_id})")
         

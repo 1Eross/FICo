@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from enum import Enum
 import sys
 sys.path.append('C:/Users/gripo/PycharmProjects/FiCo')
-from app.logic.User import UserAccount
+from user import User
 
 app = FastAPI()
 
@@ -20,7 +20,7 @@ class ModelName(str, Enum):
 #     return {'message': my_key}
 
 #type notation
-@app.get("/foo1/{my_key}")
+@app.get("/auth/")
 async def read_item(my_key: int):
     return {'message': my_key, 'decriprion': "sended from id"}
 
@@ -47,9 +47,9 @@ fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 #get with args ## http://127.0.0.1:8002/authorization?user_login=something&password=something
 @app.get("/authorization")
 async def read_item(user_login: str, user_password: str):
-    isInDB = UserAccount.Authorization(user_login=user_login, user_password=user_password)
-    if isInDB:
-        return {"Message": "Auth Succesful"}
+    gettedUser = User.find_user(login=user_login, password=user_password)
+    if gettedUser:
+        return {"User_id": gettedUser.id}
     else:
         return {"Message": "User not found"}
 

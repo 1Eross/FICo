@@ -5,3 +5,6 @@ class UserExistsError(Exception):
 
 class UserNotFoundError(Exception):
     pass
+
+class UserDeletionError(Exception):
+    pass
