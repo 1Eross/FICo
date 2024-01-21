@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'my-app/components/Themed'
-import { StyleSheet, Text,  Button,TextInput, Image, TouchableNativeFeedback, SafeAreaView} from 'react-native'
+import { StyleSheet, Text,  Button,TextInput, Image, TouchableOpacity, SafeAreaView} from 'react-native'
 import { Formik, FormikHelpers, FormikValues } from 'formik'
 
 const Form = ({addCard}) => {
@@ -17,12 +17,12 @@ const Form = ({addCard}) => {
                             <TextInput style={styles.input} value={props.values.data} placeholder='Введите дату' onChangeText={props.handleChange('data')}>
                             </TextInput>
                         </View>
-                            <TouchableNativeFeedback onPress={props.handleSubmit}>
+                            <TouchableOpacity onPress={props.handleSubmit}>
                                 <Image 
                                     style={styles.buttonImage} 
                                     source={require('../assets/okButton.png')}
                                 />
-                            </TouchableNativeFeedback>
+                            </TouchableOpacity>
                     </View>
                 )}
             </Formik>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         fontSize: 20,
         color: '#664efe',
-        backgroundColor: '#1c1c2e',
+        backgroundColor: 'white',
     }
 })
 
