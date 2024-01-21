@@ -1,6 +1,6 @@
 import sys
 sys.path.append("C:/Users/user/Documents/GitHub/FICo")
-from common.db.db1 import *
+from common.db.database import *
 
 #Юнит тесты написать к каждой функции 
 class userAccount:

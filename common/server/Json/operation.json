@@ -6,5 +6,6 @@
     "currency_id": 123,
     "is_incoming": true,
     "amount": 123,
-    "operationdate": "1970-01-01 00:00:00"
+    "operation_date": "1970-01-01 00:00:00",
+    "description": "test_text"
 }
