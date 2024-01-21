@@ -32,6 +32,33 @@ class dataBase:
             if cur:
                 cur.close()
     
+    @staticmethod #работает
+    def find_user_in_database_by_login (login: str) -> bool: #если есть в базе - true, если нет - false
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+                database="FICo",
+                user="postgres",
+                password=self_db_password,
+                host="localhost",
+                port=5432)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM user_account WHERE user_login = '{login}'")
+            result = cur.fetchall()
+            if (result == []):
+                return False
+            else:
+                return True
+        except psycopg2.Error as e:
+            logging.error(f"user search error: {e}")
+            return None
+        finally:    
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
+    
     @staticmethod #
     def find_category () -> None:
         pass
