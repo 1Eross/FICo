@@ -1,5 +1,5 @@
 import sys
-sys.path.append("C:/Users/user/Documents/GitHub/FICo")
+sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
-x = dataBase.find_user_in_database_by_login("zxc")
+x = dataBase.find_user("123123", "1231231")
 print(x)

@@ -1,5 +1,6 @@
 import psycopg2
 import logging
+logging.basicConfig(level=logging.INFO, filename="common//log//py_log.log",filemode="w+")
 from datetime import datetime
 
 self_db_password = "#M135246i#"

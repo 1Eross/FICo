@@ -1,5 +1,7 @@
 import logging
-logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
+import sys
+sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
 
 class Category:
@@ -12,6 +14,7 @@ class Category:
     def category_id(self):
         return self._category_id
 
+    @category_id.setter
     def category_id(self, new_category_id):
         is_updated = dataBase.edit_category(self.id, name_column='category_id', data=new_category_id)
         if is_updated:
@@ -28,6 +31,7 @@ class Category:
     def icon(self):
         return self._icon
 
+    @icon.setter
     def icon(self, new_icon):
         is_updated = dataBase.edit_category(self.id, name_column='icon', data=new_icon)
         if is_updated:
@@ -43,7 +47,8 @@ class Category:
     @property
     def name(self):
         return self._name
-
+    
+    @name.setter
     def name(self, new_name):
         is_updated = dataBase.edit_category(self.id, name_column='name', data=new_name)
         if is_updated:
