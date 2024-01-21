@@ -34,7 +34,9 @@ class dataBase:
             return result
     
     @staticmethod #работает
-    def add_new_user (login: str, password: str) -> bool: #добавление нового пользователя
+    def add_new_user (login: str, password: str, email: str | None, phoneNumber: str | None,
+                   FNameLName: str | None, token: str | None,
+                   status: str | None) -> bool: #добавление нового пользователя
         conn = None
         cur = None
         try:
@@ -46,7 +48,8 @@ class dataBase:
                 port=5432)
             cur = conn.cursor()
 
-            cur.execute(f"INSERT INTO user_account (user_login, user_password) VALUES ('{login}', '{password}')")
+            cur.execute(f"""INSERT INTO user_account (user_login, user_password, email, phone, user_name, user_token, user_status)
+                        VALUES ('{login}', '{password}', '{email}', '{phoneNumber}', '{FNameLName}', '{token}', '{status}')""")
             conn.commit()
             
         except psycopg2.Error as e:
@@ -62,7 +65,7 @@ class dataBase:
             return True
             #log output
         
-    @staticmethod #
+    @staticmethod #работает
     def add_new_operation (user_id: int, account_id: int, #добавление новой операции 
                            category_id: int, currency_id: int,
                            is_incoming: bool, amount: int,
@@ -99,7 +102,7 @@ class dataBase:
                 cur.close()
             return True
             
-    @staticmethod #
+    @staticmethod #работает 
     def get_all_operations (user_id: int, account_id: int) -> list[tuple]: #получение все операций пользователя
         conn = None
         cur = None
@@ -154,7 +157,7 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod #
+    @staticmethod #работает
     def edit_personal_data (user_id: int, name_column: str, data: str,) -> bool:
         conn = None
         cur = None
@@ -168,11 +171,11 @@ class dataBase:
             )
             
             cur = conn.cursor()
-            cur.execute(f"UPRDATE user_account SET '{name_column}' = '{data}' WHERE useraccount_id = {user_id}")
+            cur.execute(f"UPDATE user_account SET {name_column} = '{data}' WHERE useraccount_id = {user_id}")
             conn.commit()
+            return True
         
         except psycopg2.Error as e:
-            pass
             #log output
             return False
         
@@ -182,9 +185,9 @@ class dataBase:
             if cur:
                 cur.close()
                 #наверно ретурн тру или фолс
-            return True
+            
     
-    @staticmethod #
+    @staticmethod #работает
     def get_all_personal_data (user_id: int) -> list[tuple]:
         conn = None
         cur = None
@@ -208,8 +211,8 @@ class dataBase:
                 conn.close()
             return result
     
-    @staticmethod #
-    def add_new_category (user_id: int, category_name: str, description: str) -> bool:
+    @staticmethod #работает
+    def add_new_category (category_name: str, description: str) -> bool:
         conn = None
         cur = None
         try:
@@ -222,9 +225,9 @@ class dataBase:
             )
             
             cur = conn.cursor()
-            cur.execute(f"""INSERT INTO user_category
-                        (user_id, category_name, description) 
-                        VALUES ({user_id}, '{category_name}', '{description}')""")
+            cur.execute(f"""INSERT INTO general_category
+                        (category_name, description) 
+                        VALUES ('{category_name}', '{description}')""")
             conn.commit()
         
         except psycopg2.Error as e:
@@ -246,7 +249,7 @@ class dataBase:
         pass
     
     @staticmethod #
-    def delete_operation (operation_id: int) -> bool: #удаление оперделённой операции 
+    def delete_opereation (operation_id: int) -> bool: #удаление оперделённой операции 
         #id операции есть на фронте, поэтому норм 
         conn = None
         cur = None
@@ -309,7 +312,7 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod #
+    @staticmethod #работает
     def delete_bank_account (bank_account_id: int) -> bool: #удаление кошелька пользователя
         conn = None
         cur = None
@@ -340,7 +343,7 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod #
+    @staticmethod #работает
     def edit_operation (operation_id: int, name_column: str, data: str,) -> bool: #редактирование операции
         conn = None
         cur = None
@@ -355,9 +358,9 @@ class dataBase:
             
             cur = conn.cursor()
             if (name_column == "incoming" or name_column == "amount"): #когда bool в дб нам надо кавычки ставить? 
-                cur.execute(f"UPRDATE operation SET '{name_column}' = {data} WHERE operation_id = {operation_id}")
+                cur.execute(f"UPDATE operation SET {name_column} = {data} WHERE operation_id = {operation_id}")
             else:
-                cur.execute(f"UPRDATE operation SET '{name_column}' = '{data}' WHERE operation_id = {operation_id}")
+                cur.execute(f"UPDATE operation SET {name_column} = '{data}' WHERE operation_id = {operation_id}")
 
             conn.commit()
         

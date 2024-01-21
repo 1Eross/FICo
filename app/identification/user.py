@@ -3,6 +3,7 @@ import sys
 sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
 from common.errors.errors import UserExistsError 
+from typing import Optional
 
 #ОБРАБОТКА ОСУЩЕСТВЛЯЕТСЯ ПРИ ПОМОЩИ САМОПИСНЫХ КЛАССОВ ОШИБОК, И ПРОВЕРЯЕТСЯ ЧЕРЕЗ TRY EXCEPT В КОДЕ API
 class User:
@@ -145,7 +146,7 @@ class User:
         return hashedPassword
     
     @staticmethod
-    def find_user(login: str, password: str) -> 'User' | None:
+    def find_user(login: str, password: str) -> Optional['User']:
         user_data = dataBase.find_user(login, password)
         if user_data:
             #logoutput
