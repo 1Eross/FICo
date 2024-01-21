@@ -1,0 +1,156 @@
+import psycopg2
+import logging
+
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+
+class BankAccount:
+    def __init__(self, bankAccountID, balance, currency, userID: int):
+        self._bankAccountID = bankAccountID
+        self._balance = balance
+        self._currency = currency
+        self._userID = userID
+
+    @property
+    def bankAccountID(self):
+        return self._bankAccountID
+
+    @property
+    def balance(self):
+        return self._balance
+
+    @property
+    def currency(self):
+        return self._currency
+
+    @property
+    def userID(self):
+        return self._userID
+
+    def setBankAccountInfo(self, balance, currency, userID):
+        self._balance = balance
+        self._currency = currency
+        self._userID = userID
+
+        connection = psycopg2.connect(
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
+        )
+        cursor = connection.cursor()
+
+        try:
+            query = "UPDATE bank_accounts SET balance = %s, currency = %s, userID = %s WHERE bankAccountID = %s;"
+            cursor.execute(query, (self._balance, self._currency, self._userID, self._bankAccountID))
+            connection.commit()
+        except psycopg2.Error as e:
+            logging.error(f"Error setting bank account: {e}")
+            pass
+        finally:
+            cursor.close()
+            connection.close()
+
+    def getBankAccountInfo(self):
+        connection = psycopg2.connect(
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
+        )
+        cursor = connection.cursor()
+
+        try:
+            query = "SELECT balance, currency, userID FROM bank_accounts WHERE bankAccountID = %s;"
+            cursor.execute(query, (self._bankAccountID,))
+            result = cursor.fetchone()
+
+            if result:
+                self._balance, self._currency, self._userID = result
+            else:
+                raise ValueError("Bank account not found")
+        except psycopg2.Error as e:
+            logging.error(f"Error getting bank account: {e}")
+            pass
+        finally:
+            cursor.close()
+            connection.close()
+
+    def setBalance(self, balance):
+        self.setBankAccountInfo(balance, self._currency, self._userID)
+
+    def setCurrency(self, currency):
+        self.setBankAccountInfo(self._balance, currency, self._userID)
+
+    def setUserID(self, userID):
+        self.setBankAccountInfo(self._balance, self._currency, userID)
+
+    def add_new_category(self, category):
+        connection = psycopg2.connect(
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
+        )
+        cursor = connection.cursor()
+
+        try:
+            query = "INSERT INTO categories (categoryID, icon, name) VALUES (%s, %s, %s) RETURNING categoryID;"
+            cursor.execute(query, (category.categoryID, category.icon, category.name))
+            new_category_id = cursor.fetchone()[0]
+            connection.commit()
+            return new_category_id
+        except psycopg2.Error as e:
+            logging.error(f"Error adding  new category: {e}")
+            pass
+        finally:
+            cursor.close()
+            connection.close()
+
+    def add_new_operation(self, operation):
+        connection = psycopg2.connect(
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
+        )
+        cursor = connection.cursor()
+
+        try:
+            query = "INSERT INTO operations (operationID, date, amount, categoryID, bankAccountID, description, userID) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING operationID;"
+            cursor.execute(query, (operation.operationID, operation.date, operation.amount, operation.categoryID, operation.bankAccountID, operation.description, operation.userID))
+            new_operation_id = cursor.fetchone()[0]
+            connection.commit()
+            return new_operation_id
+        except psycopg2.Error as e:
+            logging.error(f"Error adding new operation: {e}")
+            pass
+        finally:
+            cursor.close()
+            connection.close()
+
+    def delete(self):
+        connection = psycopg2.connect(
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
+        )
+        cursor = connection.cursor()
+
+        try:
+            query = "DELETE FROM bank_accounts WHERE bankAccountID = %s;"
+            cursor.execute(query, (self._bankAccountID,))
+            connection.commit()
+        except psycopg2.Error as e:
+            logging.error(f"Error deleting bank account: {e}")
+            pass
+        finally:
+            cursor.close()
+            connection.close()
+
+
