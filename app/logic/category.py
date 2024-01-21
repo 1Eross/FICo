@@ -1,6 +1,8 @@
 import psycopg2
 import logging
 
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+
 class Category:
     def __init__(self, categoryID, icon, name):
         self._categoryID = categoryID
@@ -64,7 +66,3 @@ class Category:
             cursor.close()
             connection.close()
 
-# Пример использования:
-# category = Category(categoryID=1, icon="icon.png", name="Example Category")
-# category.setCategoryInfo(icon="new_icon.png", name="Updated Category")
-# category.delete()

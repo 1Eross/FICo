@@ -1,5 +1,6 @@
 import psycopg2
 import logging
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
 
 class Operation:
     def __init__(self, operationID, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
@@ -157,10 +158,3 @@ class Operation:
         finally:
             cursor.close()
             connection.close()
-
-# Пример использования:
-# operation = Operation(operationID=1, operation_date="2024-01-20", amount=100.0, category_id=2, account_id=3, description="Expense", user_id=4)
-# operation.setOperationInfo(operation_date="2024-01-21", amount=150.0, category_id=3, account_id=4, description="Upoperation_dated Expense", user_id=5)
-# operation.edit(amount=200.0, description="Edited Expense")
-# operation.delete()
-# new_operation_id = operation.copy()

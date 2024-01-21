@@ -1,6 +1,8 @@
 import psycopg2
 import logging
 
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+
 class BankAccount:
     def __init__(self, bankAccountID, balance, currency, userID: int):
         self._bankAccountID = bankAccountID
@@ -151,10 +153,4 @@ class BankAccount:
             cursor.close()
             connection.close()
 
-# Пример использования:
-# bank_account = BankAccount(bankAccountID=1, balance=1000.0, currency="USD", userID=1)
-# category = Category(categoryID=1, icon="icon.png", name="Example Category")
-# operation = Operation(operationID=1, date="2024-01-20", amount=100.0, categoryID=1, bankAccountID=1, description="Expense", userID=1)
-# bank_account.add_new_category(category)
-# bank_account.add_new_operation(operation)
-# bank_account.delete()
+
