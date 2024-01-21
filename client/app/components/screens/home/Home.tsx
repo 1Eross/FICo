@@ -1,6 +1,6 @@
 import { View } from 'my-app/components/Themed'
 import { FC, useState } from 'react'
-import { StyleSheet, Text, SafeAreaView, FlatList, Image, TouchableNativeFeedback, Modal} from 'react-native'
+import { StyleSheet, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Modal} from 'react-native'
 // import CardsList from './components/CardsList'
 import Form from './components/Form'
 import { list } from 'postcss'
@@ -8,6 +8,8 @@ import { list } from 'postcss'
 const Home: FC = () => {
 
     const [modalWindow, setModalWindow] = useState(false);
+
+    const [cardsData, setCards] = useState([]);
 
     const addCard = (card: any) => {
         setCards((list) => {
@@ -20,9 +22,14 @@ const Home: FC = () => {
         setModalWindow(false)
     }
 
-    const [cardsData, setCards] = useState([
-        {number: '3500', category: 'Kaif', data: '21/06/23', id: '1'}
-    ]);
+    const dellCard = (cardId: any) => {
+        setCards((prevData) => prevData.filter((item) => item.id !== cardId))
+    }
+
+    const handleRemoveCard = (cardId: any) => {
+        dellCard(cardId);
+      };
+
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -37,12 +44,12 @@ const Home: FC = () => {
                         <Form addCard={addCard}/>
                     </View>
                     <View style={styles.ModalButtons}>
-                        <TouchableNativeFeedback onPress={() => setModalWindow(false)}>
+                        <TouchableOpacity onPress={() => setModalWindow(false)}>
                             <Image 
                                 style={styles.buttonImage} 
                                 source={require('./assets/cancelButton.png')}
                             />
-                        </TouchableNativeFeedback> 
+                        </TouchableOpacity> 
                     </View>
                 </SafeAreaView>
             </Modal>
@@ -58,23 +65,34 @@ const Home: FC = () => {
                 <FlatList 
                 data={cardsData}
                 renderItem={({item}) => (
-                    <View style={styles.View}> 
-                    <Text style={styles.text1}>{item.number}</Text>
-                    <Text style={styles.text2}>{item.category}</Text>
-                    <Text style={styles.text3}>{item.data}</Text>
+                    <View style={styles.View}>
+                        <View style={styles.ViewSmall}>
+                            <Text style={styles.text1}>{item.number}</Text>
+                            <Text style={styles.text2}>{item.category}</Text>
+                            <Text style={styles.text3}>{item.data}</Text>
+                        </View>
+                        <View style={styles.ViewSmall2}>
+                            <TouchableOpacity onPress={() => handleRemoveCard(item.id)}>
+                                <Image 
+                                    style={styles.buttonImage2} 
+                                    source={require('./assets/dellButton.png')}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
+                // dellCard={dellCard}
                 style={styles.List}>
                 </FlatList>
             </View>
 
             <View style={styles.viewButton}>
-                <TouchableNativeFeedback onPress={() => setModalWindow(true)}>
+                <TouchableOpacity onPress={() => setModalWindow(true)}>
                     <Image 
                         style={styles.buttonImage} 
                         source={require('./assets/addButton.png')}
                     />
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
             </View>
             
         </SafeAreaView>
@@ -144,12 +162,28 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 5,
         marginHorizontal: 10,
+        flexDirection: 'row',
+    },
+    ViewSmall: {
+        backgroundColor: '#664efe',
+        flex: 8,
+    },
+    ViewSmall2: {
+        backgroundColor: '#664efe',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        flex: 1,
     },
     
     
     buttonImage: {
         width: 60,
         height: 60,
+    },
+    buttonImage2: {
+        width: 40,
+        height: 40,
+
     },
     text: {
         fontSize: 25,
