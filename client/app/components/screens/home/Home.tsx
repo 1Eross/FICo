@@ -1,19 +1,28 @@
 import { View } from 'my-app/components/Themed'
 import { FC, useState } from 'react'
-import { StyleSheet, Text, SafeAreaView, Alert, Image, TouchableNativeFeedback, Modal} from 'react-native'
-import CardsList from './components/CardsList'
+import { StyleSheet, Text, SafeAreaView, FlatList, Image, TouchableNativeFeedback, Modal} from 'react-native'
+// import CardsList from './components/CardsList'
 import Form from './components/Form'
 import { list } from 'postcss'
 
 const Home: FC = () => {
-    const buttonPress = () => {
-        Alert.alert("Добавить трату", "", [
-            {text: "Ок", onPress: () => console.log('Ok')},
-            {text: 'Отмена', onPress: () => console.log('Отмена')}
-        ])
-    }
 
     const [modalWindow, setModalWindow] = useState(false);
+
+    const addCard = (card: any) => {
+        setCards((list) => {
+            card.id = Math.random().toString()
+            return [
+                card,
+                ...list
+            ]
+        })
+        setModalWindow(false)
+    }
+
+    const [cardsData, setCards] = useState([
+        {number: '3500', category: 'Kaif', data: '21/06/23', id: '1'}
+    ]);
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -25,7 +34,7 @@ const Home: FC = () => {
                         </Text>
                     </View>
                     <View style={styles.ModalText}>
-                        <Form />
+                        <Form addCard={addCard}/>
                     </View>
                     <View style={styles.ModalButtons}>
                         <TouchableNativeFeedback onPress={() => setModalWindow(false)}>
@@ -46,7 +55,17 @@ const Home: FC = () => {
             </View>
 
             <View style={styles.viewCards}>
-                <CardsList />
+                <FlatList 
+                data={cardsData}
+                renderItem={({item}) => (
+                    <View style={styles.View}> 
+                    <Text style={styles.text1}>{item.number}</Text>
+                    <Text style={styles.text2}>{item.category}</Text>
+                    <Text style={styles.text3}>{item.data}</Text>
+                    </View>
+                )}
+                style={styles.List}>
+                </FlatList>
             </View>
 
             <View style={styles.viewButton}>
@@ -104,6 +123,27 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 30,
+    },
+
+
+    text1: {
+        fontSize: 25,
+    },
+    text2: {
+        fontSize: 18,
+    },
+    text3: {
+        fontSize: 15,
+    },
+    List: {
+        backgroundColor: '#1c1c2e',
+        width: '100%',
+    },
+    View: {
+        backgroundColor: '#664efe',
+        padding: 10,
+        marginVertical: 5,
+        marginHorizontal: 10,
     },
     
     

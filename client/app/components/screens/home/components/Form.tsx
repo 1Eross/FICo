@@ -3,24 +3,26 @@ import { View } from 'my-app/components/Themed'
 import { StyleSheet, Text,  Button,TextInput, Image, TouchableNativeFeedback, SafeAreaView} from 'react-native'
 import { Formik, FormikHelpers, FormikValues } from 'formik'
 
-const Form = () => {
+const Form = ({addCard}) => {
     return (
         <SafeAreaView>
-            <Formik initialValues={{name: '', desc: '', category: ''}} onSubmit={(values) => {console.log(values)}}>
+            <Formik initialValues={{number: '', category: '', data: ''}} onSubmit={(values, action) => {addCard(values), action.resetForm}}>
                 {(props) => (
-                    <View style={styles.View}>
-                        <TextInput style={styles.text} value={props.values.name} placeholder='Введите сумму' onChangeText={props.handleChange('name')}>
-                        </TextInput>
-                        <TextInput style={styles.text} value={props.values.desc} multiline placeholder='Введите описание' onChangeText={props.handleChange('desc')}>
-                        </TextInput>
-                        <TextInput style={styles.text} value={props.values.category} placeholder='Введите категорию' onChangeText={props.handleChange('category')}>
-                        </TextInput>
-                        <TouchableNativeFeedback onPress={props.handleSubmit}>
-                            <Image 
-                                style={styles.buttonImage} 
-                                source={require('../assets/okButton.png')}
-                            />
-                        </TouchableNativeFeedback>
+                    <View style={styles.ViewMain}>
+                        <View style={styles.View}>
+                            <TextInput style={styles.input} value={props.values.number} placeholder='Введите сумму' onChangeText={props.handleChange('number')}>
+                            </TextInput>
+                            <TextInput style={styles.input} value={props.values.category} placeholder='Введите категорию' onChangeText={props.handleChange('category')}>
+                            </TextInput>
+                            <TextInput style={styles.input} value={props.values.data} placeholder='Введите дату' onChangeText={props.handleChange('data')}>
+                            </TextInput>
+                        </View>
+                            <TouchableNativeFeedback onPress={props.handleSubmit}>
+                                <Image 
+                                    style={styles.buttonImage} 
+                                    source={require('../assets/okButton.png')}
+                                />
+                            </TouchableNativeFeedback>
                     </View>
                 )}
             </Formik>
@@ -32,15 +34,26 @@ const styles = StyleSheet.create({
     buttonImage: {
         width: 60,
         height: 60,
+        
     },
-    View: {
+    ViewMain: {
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
+        // width: '100%',
     },
-    text: {
+    View: {
+        backgroundColor: '#1c1c2e'
+    },
+    input: {
+        borderWidth: 1,
+        marginTop: 15,
+        padding: 10,
+        borderColor: '#664efe',
+        borderRadius: 10,
         fontSize: 20,
         color: '#664efe',
+        backgroundColor: '#1c1c2e',
     }
 })
 
