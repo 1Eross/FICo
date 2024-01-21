@@ -31,7 +31,8 @@ const AuthFields: FC<{ control: Control<IAuthFormData> }> = ({ control }) => {
                             )}
                         >
                             <TextInput 
-                                placeholder='Enter email' 
+                                placeholder='Enter email'
+                                placeholderTextColor ='#858585' 
                                 value={value} 
                             onChangeText={onChange} 
                             onBlur={onBlur} 
@@ -67,7 +68,8 @@ const AuthFields: FC<{ control: Control<IAuthFormData> }> = ({ control }) => {
                             )}
                         >
                             <TextInput 
-                                placeholder='Enter password' 
+                                placeholder='Enter password'
+                                placeholderTextColor ='#858585' 
                                 value={value} 
                                 onChangeText={onChange} 
                                 onBlur={onBlur} 
