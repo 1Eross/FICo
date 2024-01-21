@@ -1,8 +1,14 @@
 import hashlib
+
+import logging
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
+
 import sys
 sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
-from common.errors.errors import UserExistsError 
+from common.errors.errors import UserExistsError
+from common.errors.errors import UserNotFoundError
+
 from typing import Optional
 
 #ОБРАБОТКА ОСУЩЕСТВЛЯЕТСЯ ПРИ ПОМОЩИ САМОПИСНЫХ КЛАССОВ ОШИБОК, И ПРОВЕРЯЕТСЯ ЧЕРЕЗ TRY EXCEPT В КОДЕ API
@@ -36,9 +42,11 @@ class User:
     def login(self, new_login: str) -> bool:
         is_updated = dataBase.edit_personal_data(self.id, name_column='user_login', data=new_login)
         if is_updated:
+            logging.info(f"User id:{self.id} login updated succesfully on {new_login}")
             self._login = new_login
             return True
         else:
+            logging.error(f"User id:{self.id} login update error")
             return False
         
 
@@ -52,10 +60,10 @@ class User:
         is_updated = dataBase.edit_personal_data(self.id, name_column='user_password', data=hashed_password)
         if is_updated:
             self._password = hashed_password
-            #logoutput
+            logging.info(f"User id:{self.id} password updated succesfully on {new_password}")
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} password update error")
             return False
             
             
@@ -69,11 +77,11 @@ class User:
     def email(self, new_email: str) -> bool:
         is_updated = dataBase.edit_personal_data(self.id, name_column='email', data=new_email)
         if is_updated:
-            #logouput
+            logging.info(f"User id:{self.id} email updated succesfully on {new_email}")
             self._email = new_email
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} email update error")
             return False
         
 
@@ -85,11 +93,11 @@ class User:
     def phoneNumber(self, new_phone_number: str) -> bool:
         is_updated = dataBase.edit_personal_data(self.id, name_column='phone', data=new_phone_number)
         if is_updated:
-            #logouput
+            logging.info(f"User id:{self.id} phone updated succesfully on {new_phone_number}")
             self._phoneNumber = new_phone_number
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} phone update error")
             return False
 
     @property
@@ -100,11 +108,11 @@ class User:
     def FNameLName(self, new_name):
         is_updated = dataBase.edit_personal_data(self.id, name_column='user_name', data=new_name)
         if is_updated:
-            #logouput
+            logging.info(f"User id:{self.id} name updated succesfully on {new_name}")
             self._FNameLName = new_name
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} phone update error")
             return False
 
     @property
@@ -115,11 +123,11 @@ class User:
     def token(self, new_token: str):
         is_updated = dataBase.edit_personal_data(self.id, name_column='user_token', data=new_token)
         if is_updated:
-            #logouput
+            logging.info(f"User id:{self.id} token updated succesfully on {new_token}")
             self._token = new_token
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} token update error")
             return False
 
     @property
@@ -130,11 +138,11 @@ class User:
     def status(self, new_status: str):
         is_updated = dataBase.edit_personal_data(self.id, name_column='user_token', data=new_status)
         if is_updated:
-            #logouput
+            logging.info(f"User id:{self.id} status updated succesfully on {new_status}")
             self._status = new_status
             return True
         else:
-            #logoutput
+            logging.error(f"User id:{self.id} token update error")
             return False
     
                 
@@ -149,14 +157,14 @@ class User:
     def find_user(login: str, password: str) -> Optional['User']:
         user_data = dataBase.find_user(login, password)
         if user_data:
-            #logoutput
+            logging.info(f"User with id {user_data[0]} found seccesfully {user_data}")
             return User(id=user_data[0], login=user_data[1],
                         password=user_data[2], email=user_data[3],
                         phoneNumber=user_data[4], FNameLName=user_data[5],
                         token=user_data[6], status=user_data[6])
         else:
-            #logoutput
-            return None
+            logging.error(f"User with params (login={login}, password={password}) not exists")
+            raise UserNotFoundError(f"User with params (login={login}, password={password}) not exists")
         
     
     @staticmethod
@@ -164,14 +172,15 @@ class User:
                    email: str | None, phoneNumber: str | None,
                    FNameLName: str | None, token: str | None,
                    status: str | None) -> bool:
-        user = User.find_user(login=login, password=password)
+        # user = dataBase.
         if user:
-            #logout Пользователь существует
+            logging.error(f"Create user attempt failed: User with (login={login}) allready exists")
             #Отправка ошибки клиенту - пользователь существует
             raise UserExistsError("User allready exists")
         else:
-            dataBase.add_new_user()
-            pass
+            logging.info(f"User successfully created with params")
+            dataBase.add_new_user(login, password, email, phoneNumber, FNameLName, token, status)
+            
             
             
     
