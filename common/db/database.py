@@ -1,18 +1,21 @@
 import psycopg2
 from datetime import datetime
 
-
-password = "admin"
+self_db_password = "#M135246i#"
 
 class dataBase:
     #Подумать над передачей файлов (скорее всего json)
-    @staticmethod
-    def find_user(login: str, password: str) -> list[tuple]: #поиск пользователя в таблице
+    #Чтобы код работал, надо поменять пароль во всех функциях 
+    
+    @staticmethod #работает
+    def find_user (login: str, password: str) -> list[tuple]: #поиск пользователя в таблице
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
                 database="FICo",
                 user="postgres",
-                password="admin",
+                password=self_db_password,
                 host="localhost",
                 port=5432)
             cur = conn.cursor()
@@ -23,17 +26,21 @@ class dataBase:
             pass #logoutput
             return None
         finally:    
-            conn.close()
-            cur.close()
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
             return result
     
-    @staticmethod
+    @staticmethod #работает
     def add_new_user (login: str, password: str) -> bool: #добавление нового пользователя
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
                 database="FICo",
                 user="postgres",
-                password="admin",
+                password=self_db_password,
                 host="localhost",
                 port=5432)
             cur = conn.cursor()
@@ -42,7 +49,8 @@ class dataBase:
             conn.commit()
             
         except psycopg2.Error as e:
-            pass #logOutputError
+            #logOutputError
+            print(e)
             return False
         
         finally:            
@@ -53,27 +61,28 @@ class dataBase:
             return True
             #log output
         
-    @staticmethod
+    @staticmethod #
     def add_new_operation (user_id: int, account_id: int, #добавление новой операции 
                            category_id: int, currency_id: int,
                            is_incoming: bool, amount: int,
                            operation_date: str,  description: str) -> bool: ##Может возвращает id созданной операции ?
         
         timestamp_value = datetime.strptime(operation_date, "%Y-%m-%d %H:%M:%S")
-        
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
             
             cur = conn.cursor()
-            cur.execute(f"INSERT INTO operation 
+            cur.execute(f"""INSERT INTO operation
                         (account_id, user_id, category_id, currency_id, incoming, amount, operation_date, description) 
-                        VALUES ({account_id}, {user_id}, {category_id}, {currency_id}, {is_incoming}, {amount}, '{timestamp_value}', '{description}')")
+                        VALUES ({account_id}, {user_id}, {category_id}, {currency_id}, {is_incoming}, {amount}, '{timestamp_value}', '{description}')""")
                         #Может быть ошибка в связи с передачей timestamp_value
             conn.commit()
         
@@ -89,13 +98,15 @@ class dataBase:
                 cur.close()
             return True
             
-    @staticmethod
+    @staticmethod #
     def get_all_operations (user_id: int, account_id: int) -> list[tuple]: #получение все операций пользователя
+        conn = None
+        cur = None
         try:  
             conn = psycopg2.connect(
                     database="FICo",
                     user="postgres",
-                    password="admin",
+                    password=self_db_password,
                     host="localhost",
                     port=5432)
             cur = conn.cursor()
@@ -110,25 +121,26 @@ class dataBase:
             if conn:
                 conn.close()
             return result
-    @staticmethod
-    def add_new_bank_account (user_id: int, balance: int, currency: str, account_name: str) -> bool: #добавление нового кошелька у пользователя
+    @staticmethod #работает
+    def add_new_bank_account (user_id: int, balance: int, currency_id: int, account_name: str) -> bool: #добавление нового кошелька у пользователя
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
             
             cur = conn.cursor()
-            cur.execute(f"INSERT INTO bank_account 
-                        (user_id, balance, currency, account_name) 
-                        VALUES ({user_id}, {balance}, '{currency}', '{account_name}')")
+            cur.execute(f"""INSERT INTO bank_account 
+                        (user_id, balance, currency_id, account_name) 
+                        VALUES ({user_id}, {balance}, {currency_id}, '{account_name}')""")
             conn.commit()
         
         except psycopg2.Error as e:
-            pass
             #log output
             return False
         
@@ -140,13 +152,15 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod 
+    @staticmethod #
     def edit_personal_data (user_id: int, name_column: str, data: str,) -> bool:
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
@@ -168,13 +182,15 @@ class dataBase:
                 #наверно ретурн тру или фолс
             return True
     
-    @staticmethod
+    @staticmethod #
     def get_all_personal_data (user_id: int) -> list[tuple]:
+        conn = None
+        cur = None
         try:  
             conn = psycopg2.connect(
                     database="FICo",
                     user="postgres",
-                    password="admin",
+                    password=self_db_password,
                     host="localhost",
                     port=5432)
             cur = conn.cursor()
@@ -190,21 +206,23 @@ class dataBase:
                 conn.close()
             return result
     
-    @staticmethod 
+    @staticmethod #
     def add_new_category (user_id: int, category_name: str, description: str) -> bool:
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
             
             cur = conn.cursor()
-            cur.execute(f"INSERT INTO user_category
+            cur.execute(f"""INSERT INTO user_category
                         (user_id, category_name, description) 
-                        VALUES ({user_id}, '{category_name}', '{description}')")
+                        VALUES ({user_id}, '{category_name}', '{description}')""")
             conn.commit()
         
         except psycopg2.Error as e:
@@ -220,18 +238,20 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod
+    @staticmethod #
     def find_category () -> None:
         pass
     
-    @staticmethod
+    @staticmethod #
     def delete_opereation (operation_id: int) -> bool: #удаление оперделённой операции 
         #id операции есть на фронте, поэтому норм 
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
@@ -253,13 +273,15 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod
+    @staticmethod #
     def delete_bank_account (bank_account_id: int) -> bool: #удаление кошелька пользователя
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
@@ -282,13 +304,15 @@ class dataBase:
             return True
                 #наверно ретурн тру или фолс
     
-    @staticmethod 
+    @staticmethod #
     def edit_operation (operation_id: int, name_column: str, data: str,) -> bool: #редактирование операции
+        conn = None
+        cur = None
         try:
             conn = psycopg2.connect(
             database = "FICo",
             user = "postgres",
-            password = "admin",
+            password = self_db_password,
             host = "localhost",
             port = 5432
             )
