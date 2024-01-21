@@ -11,7 +11,11 @@ const Profile: FC = () => {
     return (
         <Layout title='Profile'>
             <Button onPress={() => setUser(null)}>
-                Logout
+                <View className='items-center justify-center flex-1'> 
+                    
+
+                </View>
+                Exit
             </Button>
         </Layout>
 

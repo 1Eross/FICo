@@ -2,6 +2,6 @@
     "bank_account_id": 123,
     "user_id": 123,
     "balance": 123,
-    "currency": 123,
+    "currency_id": 123,
     "account_name": "testText"
 }
