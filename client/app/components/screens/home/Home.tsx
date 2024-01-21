@@ -1,6 +1,9 @@
 import { View } from 'my-app/components/Themed'
-import { FC } from 'react'
-import { StyleSheet, Text, SafeAreaView, Button, Alert, Image, TouchableNativeFeedback} from 'react-native'
+import { FC, useState } from 'react'
+import { StyleSheet, Text, SafeAreaView, Alert, Image, TouchableNativeFeedback, Modal} from 'react-native'
+import CardsList from './components/CardsList'
+import Form from './components/Form'
+import { list } from 'postcss'
 
 const Home: FC = () => {
     const buttonPress = () => {
@@ -10,25 +13,48 @@ const Home: FC = () => {
         ])
     }
 
+    const [modalWindow, setModalWindow] = useState(false);
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
+            <Modal visible={modalWindow}>
+                <SafeAreaView style={styles.ModalMain}>
+                    <View style={styles.ModalText}>
+                        <Text style={styles.text}>
+                            Добавление траты
+                        </Text>
+                    </View>
+                    <View style={styles.ModalText}>
+                        <Form />
+                    </View>
+                    <View style={styles.ModalButtons}>
+                        <TouchableNativeFeedback onPress={() => setModalWindow(false)}>
+                            <Image 
+                                style={styles.buttonImage} 
+                                source={require('./assets/cancelButton.png')}
+                            />
+                        </TouchableNativeFeedback> 
+                    </View>
+                </SafeAreaView>
+            </Modal>
+            
+
             <View style={styles.viewCircle}>
                 <Text style={styles.text}>
-                    Здесь будет кружок трат!
+                    Здесь будет кружок трат?
                 </Text>
             </View>
 
             <View style={styles.viewCards}>
-                <Text style={styles.text}>
-                    Здесь будет список трат!
-                </Text>
+                <CardsList />
             </View>
 
             <View style={styles.viewButton}>
-                <TouchableNativeFeedback onPress={buttonPress}>  
-                    <Image style={styles.buttonImage} source={{
-                        uri: 'https://www.pngall.com/wp-content/uploads/10/Plus-Symbol-Vector-No-Background.png',
-                    }}/>
+                <TouchableNativeFeedback onPress={() => setModalWindow(true)}>
+                    <Image 
+                        style={styles.buttonImage} 
+                        source={require('./assets/addButton.png')}
+                    />
                 </TouchableNativeFeedback>
             </View>
             
@@ -53,18 +79,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     viewButton: {
+        flex: 0.9,
+        backgroundColor: '#1c1c2e',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    
+    
+    ModalMain: {
         flex: 1,
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
     },
+    ModalButtons: {
+        backgroundColor: '#1c1c2e',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // flexDirection: 'row',
+        // marginTop: 30,
+    },
+    ModalText: {
+        backgroundColor: '#1c1c2e',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30,
+    },
+    
+    
     buttonImage: {
-        width: 65,
-        height: 65,
-        left: 0,
+        width: 60,
+        height: 60,
     },
     text: {
-        fontSize: 20,
+        fontSize: 25,
         color: '#664efe',
     }
 })
