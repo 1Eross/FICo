@@ -492,7 +492,36 @@ class dataBase:
             if cur:
                 cur.close()
     
-    
+    @staticmethod #работает
+    def delete_user (useraccount_id: int) -> bool: #удаление кошелька пользователя
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+            database = "FICo",
+            user = "postgres",
+            password = self_db_password,
+            host = "localhost",
+            port = 5432
+            )
+            
+            cur = conn.cursor()
+            cur.execute(f"DELETE FROM user_account WHERE useraccount_id = {useraccount_id}") #удаление пользователя
+            conn.commit()
+            cur.execute(f"DELETE FROM bank_account WHERE user_id = {useraccount_id}") #удаление всех кошельков пользователя
+            conn.commit()
+            cur.execute(f"DELETE FROM operation WHERE user_id = {useraccount_id}") #удаление всех операций пользователя
+            conn.commit()
+            return True
+        except psycopg2.Error as e:
+            logging.error(f"user deletion error: {e}")
+            return False
+        
+        finally:
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
     
     
     #функция добавления новой валюты?
