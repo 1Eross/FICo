@@ -1,9 +1,10 @@
 import hashlib
 import sys
-from typing import Optional
 sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
+from common.errors.errors import UserExistsError 
 
+#ОБРАБОТКА ОСУЩЕСТВЛЯЕТСЯ ПРИ ПОМОЩИ САМОПИСНЫХ КЛАССОВ ОШИБОК, И ПРОВЕРЯЕТСЯ ЧЕРЕЗ TRY EXCEPT В КОДЕ API
 class User:
     def __init__(self, id: int, login: str, password: str , email: str | None,\
                 phoneNumber: str | None, FNameLName: str | None, token: str | None, status: str | None):
@@ -15,6 +16,8 @@ class User:
         self._FNameLName = FNameLName
         self._token = token
         self._status = status
+        
+    #Cоздать конструктор по id ?
     
     @property
     def id(self):
@@ -142,7 +145,7 @@ class User:
         return hashedPassword
     
     @staticmethod
-    def findUser(login: str, password: str) -> Optional['User']:
+    def find_user(login: str, password: str) -> 'User' | None:
         user_data = dataBase.find_user(login, password)
         if user_data:
             #logoutput
@@ -159,10 +162,19 @@ class User:
     def createUser(login: str, password: str,
                    email: str | None, phoneNumber: str | None,
                    FNameLName: str | None, token: str | None,
-                   status: str | None):
-    
-        pass
+                   status: str | None) -> bool:
+        user = User.find_user(login=login, password=password)
+        if user:
+            #logout Пользователь существует
+            #Отправка ошибки клиенту - пользователь существует
+            raise UserExistsError("User allready exists")
+        else:
+            dataBase.add_new_user()
+            pass
+            
+            
     
     @staticmethod
     def deleteUser():
         pass
+        
