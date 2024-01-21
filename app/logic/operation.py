@@ -1,63 +1,75 @@
 import psycopg2
 
 class Operation:
-    def __init__(self, operationID, date, amount, categoryID, bankAccountID, description, userID):
+    def __init__(self, operationID, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
         self._operationID = operationID
-        self._date = date
+        self._operation_date = operation_date
         self._amount = amount
-        self._categoryID = categoryID
-        self._bankAccountID = bankAccountID
+        self._category_id = category_id
+        self._account_id = account_id
         self._description = description
-        self._userID = userID
+        self._user_id = user_id
+        self._currency_id = currency_id
+        self._is_incoming = is_incoming
 
     @property
     def operationID(self):
         return self._operationID
 
     @property
-    def date(self):
-        return self._date
+    def operation_date(self):
+        return self._operation_date
 
     @property
     def amount(self):
         return self._amount
 
     @property
-    def categoryID(self):
-        return self._categoryID
+    def category_id(self):
+        return self._category_id
 
     @property
-    def bankAccountID(self):
-        return self._bankAccountID
+    def account_id(self):
+        return self._account_id
 
     @property
     def description(self):
         return self._description
 
     @property
-    def userID(self):
-        return self._userID
+    def user_id(self):
+        return self._user_id
+    
+    @property
+    def currency_id(self):
+        return self._currency_id
+    
+    @property
+    def is_incoming(self):
+        return self._is_incoming
 
-    def setOperationInfo(self, date, amount, categoryID, bankAccountID, description, userID):
-        self._date = date
+    def setOperationInfo(self, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
+        self._operation_operation_date = operation_date
         self._amount = amount
-        self._categoryID = categoryID
-        self._bankAccountID = bankAccountID
+        self._category_id = category_id
+        self._account_id = account_id
         self._description = description
-        self._userID = userID
+        self._user_id = user_id
+        self._currency_id = currency_id
+        self._is_incoming = is_incoming
 
         connection = psycopg2.connect(
-            dbname="FiCO",
+            dbname="FICo",
             user="postgres",
             password="admin",
             host="localhost",
-            port="5433"
+            port=5432
         )
         cursor = connection.cursor()
 
         try:
-            query = "UPDATE operations SET date = %s, amount = %s, categoryID = %s, bankAccountID = %s, description = %s, userID = %s WHERE operationID = %s;"
-            cursor.execute(query, (self._date, self._amount, self._categoryID, self._bankAccountID, self._description, self._userID, self._operationID))
+            query = "UPoperation_date operations SET operation_date = %s, amount = %s, category_id = %s, account_id = %s, description = %s, user_id = %s WHERE operationID = %s;"
+            cursor.execute(query, (self._operation_date, self._amount, self._category_id, self._account_id, self._description, self._user_id, self._operationID, self._currency_id))
             connection.commit()
         except psycopg2.Error as e:
             # Обработка ошибок
@@ -68,11 +80,11 @@ class Operation:
 
     def delete(self):
         connection = psycopg2.connect(
-            dbname="YourDBName",
-            user="YourDBUser",
-            password="YourDBPassword",
-            host="YourDBHost",
-            port="YourDBPort"
+            dbname="FICo",
+            user="postgres",
+            password="admin",
+            host="localhost",
+            port=5432
         )
         cursor = connection.cursor()
 
@@ -87,56 +99,56 @@ class Operation:
             cursor.close()
             connection.close()
 
-    def copy(self):
-        connection = psycopg2.connect(
-            dbname="FiCO",
-            user="postgres",
-            password="admin",
-            host="localhost",
-            port="5433"
-        )
-        cursor = connection.cursor()
+    # def copy(self):
+    #     connection = psycopg2.connect(
+    #         dbname="FICo",
+    #         user="postgres",
+    #         password="admin",
+    #         host="localhost",
+    #         port=5432
+    #     )
+    #     cursor = connection.cursor()
 
-        try:
-            query = "INSERT INTO operations (date, amount, categoryID, bankAccountID, description, userID) VALUES (%s, %s, %s, %s, %s, %s) RETURNING operationID;"
-            cursor.execute(query, (self._date, self._amount, self._categoryID, self._bankAccountID, self._description, self._userID))
-            new_operation_id = cursor.fetchone()[0]
-            connection.commit()
-            return new_operation_id
-        except psycopg2.Error as e:
-            # Обработка ошибок
-            pass
-        finally:
-            cursor.close()
-            connection.close()
+    #     try:
+    #         query = "INSERT INTO operations (operation_date, amount, category_id, account_id, description, user_id) VALUES (%s, %s, %s, %s, %s, %s) RETURNING operationID;"
+    #         cursor.execute(query, (self._operation_date, self._amount, self._category_id, self._account_id, self._description, self._user_id))
+    #         new_operation_id = cursor.fetchone()[0]
+    #         connection.commit()
+    #         return new_operation_id
+    #     except psycopg2.Error as e:
+    #         # Обработка ошибок
+    #         pass
+    #     finally:
+    #         cursor.close()
+    #         connection.close()
 
-    def edit(self, date=None, amount=None, categoryID=None, bankAccountID=None, description=None, userID=None):
+    def edit(self, operation_date=None, amount=None, category_id=None, account_id=None, description=None, user_id=None):
         # Позволяет редактировать отдельные атрибуты операции
-        if date is not None:
-            self._date = date
+        if operation_date is not None:
+            self._operation_date = operation_date
         if amount is not None:
             self._amount = amount
-        if categoryID is not None:
-            self._categoryID = categoryID
-        if bankAccountID is not None:
-            self._bankAccountID = bankAccountID
+        if category_id is not None:
+            self._category_id = category_id
+        if account_id is not None:
+            self._account_id = account_id
         if description is not None:
             self._description = description
-        if userID is not None:
-            self._userID = userID
+        if user_id is not None:
+            self._user_id = user_id
 
         connection = psycopg2.connect(
-            dbname="FiCO",
+            dbname="FICo",
             user="postgres",
             password="admin",
             host="localhost",
-            port="5433"
+            port=5432
         )
         cursor = connection.cursor()
 
         try:
-            query = "UPDATE operations SET date = %s, amount = %s, categoryID = %s, bankAccountID = %s, description = %s, userID = %s WHERE operationID = %s;"
-            cursor.execute(query, (self._date, self._amount, self._categoryID, self._bankAccountID, self._description, self._userID, self._operationID))
+            query = "UPoperation_date operations SET operation_date = %s, amount = %s, category_id = %s, account_id = %s, description = %s, user_id = %s WHERE operationID = %s;"
+            cursor.execute(query, (self._operation_date, self._amount, self._category_id, self._account_id, self._description, self._user_id, self._operationID))
             connection.commit()
         except psycopg2.Error as e:
             # Обработка ошибок
@@ -146,8 +158,8 @@ class Operation:
             connection.close()
 
 # Пример использования:
-# operation = Operation(operationID=1, date="2024-01-20", amount=100.0, categoryID=2, bankAccountID=3, description="Expense", userID=4)
-# operation.setOperationInfo(date="2024-01-21", amount=150.0, categoryID=3, bankAccountID=4, description="Updated Expense", userID=5)
+# operation = Operation(operationID=1, operation_date="2024-01-20", amount=100.0, category_id=2, account_id=3, description="Expense", user_id=4)
+# operation.setOperationInfo(operation_date="2024-01-21", amount=150.0, category_id=3, account_id=4, description="Upoperation_dated Expense", user_id=5)
 # operation.edit(amount=200.0, description="Edited Expense")
 # operation.delete()
 # new_operation_id = operation.copy()

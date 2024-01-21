@@ -23,11 +23,11 @@ class Category:
         self._name = name
 
         connection = psycopg2.connect(
-            dbname="FiCO",
+            dbname="FICo",
             user="postgres",
             password="admin",
             host="localhost",
-            port="5433"
+            port=5432
         )
         cursor = connection.cursor()
 
@@ -44,11 +44,11 @@ class Category:
 
     def delete(self):
         connection = psycopg2.connect(
-            dbname="FiCO",
+            dbname="FICo",
             user="postgres",
             password="admin",
             host="localhost",
-            port="5433"
+            port=5432
         )
         cursor = connection.cursor()
 
