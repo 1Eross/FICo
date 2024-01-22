@@ -59,6 +59,15 @@ class Category:
             logging.error(f"Failed to update Name to {new_name}")
             return False
 
+    def add_new_category(self, new_category, name):
+        is_added = dataBase.add_new_category(new_category, name)
+        if is_added:
+            logging.info(f"New category added successfully: {new_category}")
+            return True
+        else:
+            logging.error(f"Failed to add new category: {new_category}")
+            return False
+
     def delete(self):
         is_deleted = dataBase.delete_category(self.id)
         if is_deleted:
