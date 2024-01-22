@@ -1,26 +1,26 @@
-import { FC } from 'react'
-import { Text, View } from 'react-native'
+// Profile.tsx
 
-import Layout from '@/components/ui/layout/Layout'
-import Button from '@/components/ui/layout/bottom-menu/Button'
-import { useAuth } from '@/hooks/useAuth'
+import React, { FC } from 'react';
+import { View, Text } from 'react-native';
+import Layout from '@/components/ui/layout/Layout';
+import Button from '@/components/ui/layout/bottom-menu/Button';
+import { useAuth } from '@/hooks/useAuth';
+import resources from '../../../../i18nResources';
 
 const Profile: FC = () => {
-    const{setUser} = useAuth() 
+    const { setUser } = useAuth();
+
+    const language = 'ru'; // Здесь установите выбранный язык
 
     return (
-        <Layout title='Profile'>
+        <Layout title={resources[language].profile}>
             <Button onPress={() => setUser(null)}>
-                <View className='items-center justify-center flex-1'> 
-                    
-
+                <View className='items-center justify-center flex-1'>
                 </View>
-                Exit
+                {resources[language].exit}
             </Button>
         </Layout>
+    );
+};
 
-
-    )
-}
-
-export default Profile
+export default Profile;
