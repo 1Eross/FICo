@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
+logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
 from common.db.database import dataBase
 
 class Category:

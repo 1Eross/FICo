@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
 from common.db.database import dataBase
 class Operation:
     def __init__(self, operation_id, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
