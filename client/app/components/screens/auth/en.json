@@ -1,0 +1,15 @@
+{
+    "signIn": "Sign In",
+    "In": "Authorization",
+    "signUp": "Sign Up",
+    "enterFirstName": "Enter first name",
+    "enterLastName": "Enter last name",
+    "enterLogin": "Enter login",
+    "enterPassword": "Enter password",
+    "enterEmail": "Enter email",
+    "invalidEmail": "Invalid email format",
+    "enterPhoneNumber": "Enter phone number",
+    "invalidPhoneNumber": "Invalid phone number format",
+    "changeLanguage": "En/Ru"
+  }
+  
