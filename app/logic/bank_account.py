@@ -77,4 +77,30 @@ class BankAccount:
             logging.error(f"Failed to update User ID to {new_userID}")
             return False
 
+    def add_new_category(self, new_category):
+        is_added = dataBase.add_new_category(new_category)
+        if is_added:
+            logging.info(f"New category added successfully: {new_category}")
+            return True
+        else:
+            logging.error(f"Failed to add new category: {new_category}")
+            return False
+
+    def add_new_operation(self, new_operation):
+        is_added = dataBase.add_operation(new_operation)
+        if is_added:
+            logging.info(f"New operation added successfully: {new_operation}")
+            return True
+        else:
+            logging.error(f"Failed to add new operation: {new_operation}")
+            return False
+
+    def delete(self):
+        is_deleted = dataBase.delete_bank_account(self.id)
+        if is_deleted:
+            logging.info(f"Data for account {self.id} deleted successfully")
+            return True
+        else:
+            logging.error(f"Failed to delete data for account {self.id}")
+            return False
   

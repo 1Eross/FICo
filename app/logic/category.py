@@ -58,3 +58,12 @@ class Category:
             # Логирование неудачного обновления
             logging.error(f"Failed to update Name to {new_name}")
             return False
+
+    def delete(self):
+        is_deleted = dataBase.delete_category(self.id)
+        if is_deleted:
+            logging.info(f"Category deleted successfully. Category ID: {self._category_id}")
+            return True
+        else:
+            logging.error(f"Failed to delete Category. Category ID: {self._category_id}")
+            return False

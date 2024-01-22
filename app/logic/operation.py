@@ -157,3 +157,27 @@ class Operation:
             # Логирование неудачного обновления
             logging.error(f"Failed to update is incoming to {new_is_incoming}")
             return False
+        
+    def edit_operation(self, name_column, data):
+        is_updated = dataBase.edit_operation(self.operation_id, name_column=name_column, data=data)
+        if is_updated:
+            # Логирование успешного обновления
+            logging.info(f"{name_column} updated successfully to {data}")
+            # Дополнительно, обновите соответствующий атрибут в объекте
+            setattr(self, f"_{name_column}", data)
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update {name_column} to {data}")
+            return False
+
+    def delete(self):
+        is_deleted = dataBase.delete_operation(self.operation_id)
+        if is_deleted:
+            # Логирование успешного удаления
+            logging.info(f"Operation with ID {self.operation_id} deleted successfully")
+            return True
+        else:
+            # Логирование неудачного удаления
+            logging.error(f"Failed to delete operation with ID {self.operation_id}")
+            return False
