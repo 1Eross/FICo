@@ -1,0 +1,14 @@
+{
+  "signIn": "Войти",
+  "In": "Авторизация",
+  "signUp": "Регистрация",
+  "enterFirstName": "Введите имя",
+  "enterLastName": "Введите фамилию",
+  "enterLogin": "Введите логин",
+  "enterPassword": "Введите пароль",
+  "enterEmail": "Введите email",
+  "invalidEmail": "Неверный формат email",
+  "enterPhoneNumber": "Введите номер телефона",
+  "invalidPhoneNumber": "Неверный формат номера телефона",
+  "changeLanguage": "En/Ru"
+}

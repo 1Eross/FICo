@@ -1,22 +1,28 @@
 // LanguageContext.tsx
+import React, { createContext, useContext, ReactNode, useState, FC } from 'react';
 
-import React, { createContext, useContext, FC, ReactNode, useState } from 'react';
+type Language = 'en' | 'ru';
 
-type LanguageContextProps = {
-  language: 'en' | 'ru';
-  setLanguage: (language: 'en' | 'ru') => void;
-};
+interface LanguageContextProps {
+  children: ReactNode;
+}
 
-const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
+interface LanguageContextValue {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+}
 
-export const LanguageProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<'en' | 'ru'>('en');
+const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+export const LanguageProvider: FC<LanguageContextProps> = ({ children }) => {
+  const [language, setLanguage] = useState<Language>('en');
+
+  const value: LanguageContextValue = {
+    language,
+    setLanguage,
+  };
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 };
 
 export const useLanguage = () => {
