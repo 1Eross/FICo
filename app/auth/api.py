@@ -47,6 +47,7 @@ fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 async def read_item(user_login: str, user_password: str):
     gettedUser = User.find_user(login=user_login, password=user_password)
     if gettedUser:
+        User.phoneNumber("1233567")
         return {"User_id": gettedUser.id}
     else:
         return {"Message": "User not found"}
