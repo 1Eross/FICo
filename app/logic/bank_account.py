@@ -1,6 +1,10 @@
+
+import sys
+sys.path.append("C:\\Users\\gripo\\PycharmProjects\\FiCo")
+
 import logging
 from common.db.database import dataBase
-logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
 
 class BankAccount:
     def __init__(self, account_id, balance, currency, userID: int):

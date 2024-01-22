@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
 from common.db.database import dataBase
 class Operation:
     def __init__(self, operation_id, operation_date, amount, category_id, account_id, description, user_id, currency_id, is_incoming):
@@ -157,7 +157,8 @@ class Operation:
             # Логирование неудачного обновления
             logging.error(f"Failed to update is incoming to {new_is_incoming}")
             return False
-        
+    
+    @staticmethod   
     def edit_operation(self, name_column, data):
         is_updated = dataBase.edit_operation(self.operation_id, name_column=name_column, data=data)
         if is_updated:
@@ -170,7 +171,18 @@ class Operation:
             # Логирование неудачного обновления
             logging.error(f"Failed to update {name_column} to {data}")
             return False
-
+    
+    @staticmethod
+    def get_all_operation(user_id: int, account_id: int) -> list[tuple]:
+        operations = dataBase.get_all_operations(user_id, account_id=account_id)
+        if len(operations) == 0:
+            logging.error("Error while loading in operation class")
+            return None
+        else:
+            return operations
+            
+            
+    
     def delete(self):
         is_deleted = dataBase.delete_operation(self.operation_id)
         if is_deleted:
