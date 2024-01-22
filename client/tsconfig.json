@@ -1,13 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "types": ["connect-history-api-fallback"],
+    "typeRoots": ["node_modules/@types", "your/custom/types/path"],
     "strict": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*"]
     }
   }
-
-  
-
 }
