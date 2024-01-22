@@ -158,8 +158,22 @@ class Operation:
             logging.error(f"Failed to update is incoming to {new_is_incoming}")
             return False
         
+    def create_operation(user_id: int, account_id: int, category_id: int, currency_id: int,
+                         is_incoming: bool, amount: int, operation_date: str, description: str) -> bool:
+        is_added = dataBase.add_new_operation(user_id, account_id, category_id, currency_id,
+                                                 is_incoming, amount, operation_date, description)
+        if is_added:
+            # Логирование успешного обновления
+            logging.info(f"Is incoming updated successfully to {is_added}")
+            return True
+        else:
+            # Логирование неудачного обновления
+            logging.error(f"Failed to update is incoming to {is_added}")
+            return False
+        
+
     def edit_operation(self, name_column, data):
-        is_updated = dataBase.edit_operation(self.operation_id, name_column=name_column, data=data)
+        is_updated = dataBase.edit_operation(self.operation_id, name_column, data)
         if is_updated:
             # Логирование успешного обновления
             logging.info(f"{name_column} updated successfully to {data}")

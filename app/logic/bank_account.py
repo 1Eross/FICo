@@ -3,11 +3,11 @@ from common.db.database import dataBase
 logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
 
 class BankAccount:
-    def __init__(self, account_id, balance, currency, userID: int):
+    def __init__(self, account_id, balance, currency, user_id: int):
         self._account_id = account_id
         self._balance = balance
         self._currency = currency
-        self._userID = userID
+        self._user_id = user_id
 
     @property
     def account_id(self):
@@ -22,12 +22,12 @@ class BankAccount:
         return self._currency
 
     @property
-    def userID(self):
-        return self._userID
+    def user_id(self):
+        return self._user_id
     
     @account_id.setter
     def account_id(self, new_account_id):
-        is_updated = dataBase.edit_bank_data(self.id, name_column='account_id', data=new_account_id)
+        is_updated = dataBase.add_new_bank_account(self.id, name_column='account_id', data=new_account_id)
         if is_updated:
             # Логирование успешного обновления
             logging.info(f"Account ID updated successfully to {new_account_id}")
@@ -64,36 +64,27 @@ class BankAccount:
                 logging.error(f"Failed to update Currency to {new_currency}")
                 return False
     
-    @userID.setter
-    def userID(self, new_userID):
-        is_updated = dataBase.edit_bank_data(self.id, name_column='user_id', data=new_userID)
+    @user_id.setter
+    def user_id(self, new_user_id):
+        is_updated = dataBase.edit_bank_data(self.id, name_column='user_id', data=new_user_id)
         if is_updated:
             # Логирование успешного обновления
-            logging.info(f"User ID updated successfully to {new_userID}")
-            self._userID = new_userID
+            logging.info(f"User ID updated successfully to {new_user_id}")
+            self._userID = new_user_id
             return True
         else:
             # Логирование неудачного обновления
-            logging.error(f"Failed to update User ID to {new_userID}")
+            logging.error(f"Failed to update User ID to {new_user_id}")
             return False
-
-    def add_new_category(self, new_category):
-        is_added = dataBase.add_new_category(new_category)
-        if is_added:
-            logging.info(f"New category added successfully: {new_category}")
-            return True
+    
+    @staticmethod
+    def create_bank_account(user_id = int, balance = int, currency_id = int, account_name = str) -> bool:
+        is_created = dataBase.add_new_bank_account(user_id, balance, currency_id, account_name)
+        if is_created:
+            logging.error(f"Bank account succesfully created")
+            dataBase.add_new_bank_account(user_id, balance, currency_id, account_name)
         else:
-            logging.error(f"Failed to add new category: {new_category}")
-            return False
-
-    def add_new_operation(self, new_operation):
-        is_added = dataBase.add_operation(new_operation)
-        if is_added:
-            logging.info(f"New operation added successfully: {new_operation}")
-            return True
-        else:
-            logging.error(f"Failed to add new operation: {new_operation}")
-            return False
+            logging.info(f"Bank account creating failed)")
 
     def delete(self):
         is_deleted = dataBase.delete_bank_account(self.id)
