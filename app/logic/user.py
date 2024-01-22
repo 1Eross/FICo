@@ -189,4 +189,3 @@ class User:
         else:
             logging.error(f"Delete user attempt failed with params (id={user_id})")
             raise UserDeletionError(f"Delete user attempt failed with params (id={user_id})")
-        
