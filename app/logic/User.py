@@ -1,13 +1,12 @@
+import sys
+sys.path.append("C:\\Users\\gripo\\PycharmProjects\\FiCo")
+
 import hashlib
 
 import logging
 logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
 
 from common.db.database import dataBase
-from common.errors.errors import UserExistsError
-from common.errors.errors import UserNotFoundError
-from common.errors.errors import UserDeletionError
-
 from typing import Optional
 
 #ОБРАБОТКА ОСУЩЕСТВЛЯЕТСЯ ПРИ ПОМОЩИ САМОПИСНЫХ КЛАССОВ ОШИБОК, И ПРОВЕРЯЕТСЯ ЧЕРЕЗ TRY EXCEPT В КОДЕ API
@@ -164,7 +163,7 @@ class User:
                         token=user_data[0][6], status=user_data[0][6])
         else:
             logging.error(f"User with params (login={login}, password={password}) not exists")
-            raise UserNotFoundError(f"User with params (login={login}, password={password}) not exists")
+            return None
         
     
     @staticmethod
@@ -175,10 +174,11 @@ class User:
         user = dataBase.find_user_in_database_by_login(login)
         if user:
             logging.error(f"Create user attempt failed: User with (login={login}) allready exists")
-            raise UserExistsError(f"Create user attempt failed: User with (login={login}) allready exists")
+            return False
         else:
             logging.info(f"User successfully created with params ({login, password, email, phoneNumber, FNameLName, token, status})")
             dataBase.add_new_user(login, password, email, phoneNumber, FNameLName, token, status)
+            return True
             
     ##Выйти из сессии при удалении пользователя
     @staticmethod
@@ -189,4 +189,4 @@ class User:
             return True
         else:
             logging.error(f"Delete user attempt failed with params (id={user_id})")
-            raise UserDeletionError(f"Delete user attempt failed with params (id={user_id})")
+            return False
