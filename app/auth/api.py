@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from enum import Enum
-import sys
-sys.path.append('C:/Users/gripo/PycharmProjects/FiCo')
-from user import User
+from app.logic.user import User
 
 app = FastAPI()
 
@@ -44,8 +42,16 @@ async def read_item(my_key: int):
 
 fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 
-#get with args ## http://127.0.0.1:8002/authorization?user_login=something&password=something
+#get with args ## http://127.0.0.1:8002/authorization?user_login=something&user_password=something
 @app.get("/authorization")
+async def read_item(user_login: str, user_password: str):
+    gettedUser = User.find_user(login=user_login, password=user_password)
+    if gettedUser:
+        return {"User_id": gettedUser.id}
+    else:
+        return {"Message": "User not found"}
+    
+@app.get("/registration")
 async def read_item(user_login: str, user_password: str):
     gettedUser = User.find_user(login=user_login, password=user_password)
     if gettedUser:

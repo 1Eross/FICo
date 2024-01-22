@@ -1,7 +1,5 @@
 import logging
 logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
-import sys
-sys.path.append("C://Users//gripo//PycharmProjects//FiCo//")
 from common.db.database import dataBase
 
 class Category:
