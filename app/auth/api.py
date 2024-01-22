@@ -1,17 +1,32 @@
 from fastapi import FastAPI
-from enum import Enum
 from app.logic.user import User
+from app.logic.token import Token
+from common.errors.errors import UserExistsError
+
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
+from fastapi.openapi.models import OAuthFlowAuthorizationCode
+from fastapi.openapi.models import OAuthFlowAuthorizationCodeToken
+from fastapi.openapi.models import OAuthFlowAuthorizationCode as OAuthFlowAuthorizationCodeModel
+from fastapi.openapi.models import OAuthFlowAuthorizationCodeToken as OAuthFlowAuthorizationCodeTokenModel
+from fastapi.openapi.models import OAuthFlowsAuthorizationCode
 
 app = FastAPI()
 
-class ModelName(str, Enum):
-    apple = "apple"
-    watermellon = "watermellon"
-    grape = "grape"
+# class CustomRequestForm(OAuth2PasswordRequestForm):
+#     user_login: str
+#     user_password: str
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-#path params
-#
+@app.post("/token", response_model=Token)
+async def login_for_acess_token():
+    try:
+        user = User.find_user(login=form_data.user_login, password=form_data.user_password)
+        
+    except:
+        User
 
 # @app.get("/foo0/{my_key}")
 # async def read_item(my_key):
