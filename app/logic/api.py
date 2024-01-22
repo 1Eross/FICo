@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from enum import Enum
 import uvicorn
-
+from operation import Operation
 from user import User
 #get = получить с сервера, post = поместить на сервер, delete = удалить с сервера, put = изменение на сервере. 
 app = FastAPI()
@@ -10,7 +10,7 @@ app = FastAPI()
 #добавление операции
 @app.post("/add_operation")
 async def add_operation(account_id: int, user_id: int, category_id: int, currency_id: int, incoming: bool, amount: int, operetion_date: str,description: str):
-    
+    #answer = 
     pass
 #удаление операции
 #добавление кошелька 
