@@ -11,6 +11,7 @@ from common.errors.errors import UserDeletionError
 from typing import Optional
 
 #ОБРАБОТКА ОСУЩЕСТВЛЯЕТСЯ ПРИ ПОМОЩИ САМОПИСНЫХ КЛАССОВ ОШИБОК, И ПРОВЕРЯЕТСЯ ЧЕРЕЗ TRY EXCEPT В КОДЕ API
+
 class User:
     def __init__(self, id: int, login: str, password: str , email: str | None,\
                 phoneNumber: str | None, FNameLName: str | None, token: str | None, status: str | None):
