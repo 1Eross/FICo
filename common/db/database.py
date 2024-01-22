@@ -1,7 +1,8 @@
 import psycopg2
 import logging
+logging.basicConfig(level=logging.INFO, filename="common/log/py_log.log",filemode="w+")
 from datetime import datetime
-from config.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+from common.config.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
 
 self_db_password = "admin"
 
