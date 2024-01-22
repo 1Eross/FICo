@@ -1,9 +1,7 @@
 import { View } from 'my-app/components/Themed'
 import { FC, useState } from 'react'
 import { StyleSheet, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Modal} from 'react-native'
-// import CardsList from './components/CardsList'
 import Form from './components/Form'
-import { list } from 'postcss'
 import React from 'react'
 
 const Home: FC = () => {
@@ -57,9 +55,6 @@ const Home: FC = () => {
             
 
             <View style={styles.viewCircle}>
-                <Text style={styles.text}>
-                    Здесь будет кружок трат?
-                </Text>
             </View>
 
             <View style={styles.viewCards}>
@@ -104,7 +99,7 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     viewCircle: {
-        flex: 3.5,
+        flex: 0.5,
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
@@ -116,7 +111,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     viewButton: {
-        flex: 0.9,
+        flex: 0.5,
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
@@ -142,8 +137,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#1c1c2e',
         justifyContent: 'center',
         alignItems: 'center',
-        // flexDirection: 'row',
-        // marginTop: 30,
     },
 
 
@@ -166,6 +159,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 10,
         flexDirection: 'row',
+        borderRadius: 15,
     },
     ViewSmall: {
         backgroundColor: '#664efe',
