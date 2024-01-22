@@ -4,6 +4,7 @@ import { StyleSheet, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Moda
 // import CardsList from './components/CardsList'
 import Form from './components/Form'
 import { list } from 'postcss'
+import React from 'react'
 
 const Home: FC = () => {
 
