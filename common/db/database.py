@@ -1,9 +1,9 @@
 import psycopg2
 import logging
-logging.basicConfig(level=logging.INFO, filename="common//log//py_log.log",filemode="w+")
+logging.basicConfig(level=logging.INFO, filename="common//log//py_log.log",filemode="w")
 from datetime import datetime
 
-self_db_password = "#M135246i#"
+self_db_password = "admin"
 
 class dataBase:
     #Подумать над передачей файлов (скорее всего json)
@@ -15,17 +15,18 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-                database="FICo",
+                database="postgres",
                 user="postgres",
                 password=self_db_password,
                 host="localhost",
-                port=5432)
+                port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM user_account WHERE user_login = '{login}' AND user_password = '{password}'")
             result = cur.fetchall()
             return result
         except psycopg2.Error as e:
             logging.error(f"user search error: {e}")
+            print(f"error: {e}")
             return None
         finally:    
             if conn:
@@ -39,11 +40,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-                database="FICo",
+                database="postgres",
                 user="postgres",
                 password=self_db_password,
                 host="localhost",
-                port=5432)
+                port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM user_account WHERE user_login = '{login}'")
             result = cur.fetchall()
@@ -72,11 +73,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-                database="FICo",
+                database="postgres",
                 user="postgres",
                 password=self_db_password,
                 host="localhost",
-                port=5432)
+                port=5433)
             cur = conn.cursor()
 
             cur.execute(f"""INSERT INTO user_account (user_login, user_password, email, phone, user_name, user_token, user_status)
@@ -105,11 +106,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -136,11 +137,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -166,11 +167,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -196,11 +197,11 @@ class dataBase:
         cur = None
         try:  
             conn = psycopg2.connect(
-                    database="FICo",
+                    database="postgres",
                     user="postgres",
                     password=self_db_password,
                     host="localhost",
-                    port=5432)
+                    port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM operation WHERE user_id = {user_id} AND account_id = {account_id}")
             result = cur.fetchall()
@@ -220,11 +221,11 @@ class dataBase:
         cur = None
         try:  
             conn = psycopg2.connect(
-                    database="FICo",
+                    database="postgres",
                     user="postgres",
                     password=self_db_password,
                     host="localhost",
-                    port=5432)
+                    port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM user_account WHERE useraccount_id = {user_id}")
             result = cur.fetchall()
@@ -244,11 +245,11 @@ class dataBase:
         cur = None
         try:  
             conn = psycopg2.connect(
-                    database="FICo",
+                    database="postgres",
                     user="postgres",
                     password=self_db_password,
                     host="localhost",
-                    port=5432)
+                    port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM bank_account WHERE user_id = {user_id}")
             result = cur.fetchall()
@@ -268,11 +269,11 @@ class dataBase:
         cur = None
         try:  
             conn = psycopg2.connect(
-                    database="FICo",
+                    database="postgres",
                     user="postgres",
                     password=self_db_password,
                     host="localhost",
-                    port=5432)
+                    port=5433)
             cur = conn.cursor()
             cur.execute(f"SELECT * FROM bank_account WHERE user_id = {user_id}") #получаем список кошельков пользователя
             result_bank_account = cur.fetchall()
@@ -294,11 +295,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -322,11 +323,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -353,11 +354,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -384,11 +385,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -413,11 +414,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -442,11 +443,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -470,11 +471,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
@@ -499,11 +500,11 @@ class dataBase:
         cur = None
         try:
             conn = psycopg2.connect(
-            database = "FICo",
+            database = "postgres",
             user = "postgres",
             password = self_db_password,
             host = "localhost",
-            port = 5432
+            port = 5433
             )
             
             cur = conn.cursor()
