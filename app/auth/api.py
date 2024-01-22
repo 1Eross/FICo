@@ -3,16 +3,24 @@ from app.logic.user import User
 from app.logic.token import Token
 from common.errors.errors import UserExistsError
 
+import logging
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w+")
+
+from pydantic import BaseModel
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from fastapi.openapi.models import OAuthFlowAuthorizationCode
-from fastapi.openapi.models import OAuthFlowAuthorizationCodeToken
-from fastapi.openapi.models import OAuthFlowAuthorizationCode as OAuthFlowAuthorizationCodeModel
-from fastapi.openapi.models import OAuthFlowAuthorizationCodeToken as OAuthFlowAuthorizationCodeTokenModel
-from fastapi.openapi.models import OAuthFlowsAuthorizationCode
+
 
 app = FastAPI()
+
+class Token(BaseModel):
+    acess_token: str
+    token_type: str    
+
+class TokenRequest(BaseModel):
+    username: str
+    password: str
+    
 
 # class CustomRequestForm(OAuth2PasswordRequestForm):
 #     user_login: str
@@ -21,12 +29,22 @@ app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @app.post("/token", response_model=Token)
-async def login_for_acess_token():
+async def login_for_acess_token(form_data: TokenRequest):
     try:
         user = User.find_user(login=form_data.user_login, password=form_data.user_password)
+        #Создание сессии
+        token = Token(access_token="fake-access-token", token_type="bearer")
+        logging.info("User token created and sended")
+        return token
+    
+    except UserExistsError:
+        logging.error("User allready exists")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
         
-    except:
-        User
 
 # @app.get("/foo0/{my_key}")
 # async def read_item(my_key):
