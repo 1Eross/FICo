@@ -180,6 +180,18 @@ class Operation:
             return None
         else:
             return operations
+        
+    @staticmethod 
+    def add_opertaion(user_id: int, account_id: int, category_id: int,
+                      currency_id: int, is_incoming: bool, amount: int,
+                      operation_date: str, description: str) -> bool:
+        is_added = dataBase.add_new_operation(user_id, account_id, category_id,
+                                              currency_id, is_incoming, amount,
+                                              operation_date, description)
+        if is_added:
+            return True
+        else:
+            return False
             
             
     

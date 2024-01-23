@@ -1,89 +1,121 @@
 import sys
 sys.path.append("C:\\Users\\gripo\\PycharmProjects\\FiCo")
 
-from fastapi import FastAPI, HTTPException
+from app.auth.api import get_current_user
+from app.logic.user_model import User
+
+
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-from operation import Operation
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
-#get = получить с сервера, post = поместить на сервер, delete = удалить с сервера, put = изменение на сервере. 
+from datetime import datetime  # Import datetime for parsing operation_date
+from app.logic.operation_model import Operation  # Assuming Operation class is defined in operation module
+from fastapi import Depends, HTTPException
+from app.logic.bank_account_model import BankAccount
+from app.auth.api import get_current_user, TokenData
+
 app = FastAPI()
 
-# class OperationRequest(Request):
+@app.get("/bank_accounts", response_model=list[BankAccount])
+async def get_all_bank_accounts(current_user: TokenData = Depends(get_current_user)):
+    bank_accounts = BankAccount.get_all_bank_accounts(current_user.username)
+    return bank_accounts
 
-class BankAccountRequest(BaseModel):
-    user_id: int
-class OperationRequest(BankAccountRequest):
-    account_id: int
+# Sample route to edit the balance of a bank account
+@app.post("/bank_account/{account_id}/edit_balance")
+async def edit_balance(account_id: int, new_balance: float, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to edit this bank account
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
+    # Edit the balance using the BankAccount method
+    success = bank_account.edit_bank_data(account_id, 'balance', new_balance)
+    if success:
+        return {"message": "Balance updated successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to update balance")
+
+# Sample route to add a new category to a bank account
+@app.post("/bank_account/{account_id}/add_category")
+async def add_category(account_id: int, new_category: str, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to add a category to this bank account
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
+    # Add a new category using the BankAccount method
+    success = bank_account.add_new_category(new_category)
+    if success:
+        return {"message": f"Category '{new_category}' added successfully"}
+    else:
+        raise HTTPException(status_code=500, detail=f"Failed to add category '{new_category}'")
+
+# Sample route to add a new operation to a bank account
+@app.post("/bank_account/{account_id}/add_operation")
+async def add_operation(account_id: int, new_operation: dict, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to add an operation to this bank account
+
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
+
+    # Add a new operation using the BankAccount method
+    success = bank_account.add_new_operation(new_operation)
+
+    if success:
+        return {"message": "Operation added successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to add operation")
     
-#добавление операции
-@app.post("/add_operation")
-async def add_operation(account_id: int, user_id: int, category_id: int, currency_id: int, incoming: bool, amount: int, operetion_date: str,description: str):
-    #answer = 
-    pass
+    # Sample route to edit the balance of a bank account
+@app.post("/bank_account/{account_id}/edit_balance")
+async def edit_balance(account_id: int, new_balance: float, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to edit this bank account
 
-@app.get("/account/get_all")
-async def get_all_account(data: BankAccountRequest):
-    pass
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
 
-@app.get("/operation/get_all")
-async def get_all_opertaions(data: OperationRequest):
-    operations = Operation.get_all_operation(OperationRequest.user_id, OperationRequest.account_id)
-    operations_json = jsonable_encoder(operations)
-    return JSONResponse(content=operations_json)
-        
-#удаление операции
-#добавление кошелька 
-#удаление кошелька
-#вернуть все операции пользователя для статистики
+    # Edit the balance using the BankAccount method
+    success = bank_account.edit_bank_data(account_id, 'balance', new_balance)
 
+    if success:
+        return {"message": "Balance updated successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to update balance")
 
-#predefined params with ENUM class
-# @app.get("/foo2/{model_name}")
-# async def read_item(model_name: ModelName):
-#     if model_name.value == "apple":
-#         return{"Position": model_name, "Cost": "15$"}
-#     elif model_name is ModelName.watermellon:
-#         return{"Position": model_name, "Cost": "20$"}
-#     else:
-#         return{"Position": model_name, "Cost": "30$"}
+# Sample route to add a new category to a bank account
+@app.post("/bank_account/{account_id}/add_category")
+async def add_category(account_id: int, new_category: str, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to add a category to this bank account
+
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
+
+    # Add a new category using the BankAccount method
+    success = bank_account.add_new_category(new_category)
+
+    if success:
+        return {"message": f"Category '{new_category}' added successfully"}
+    else:
+        raise HTTPException(status_code=500, detail=f"Failed to add category '{new_category}'")
+
+# Sample route to add a new operation to a bank account
+@app.post("/bank_account/{account_id}/add_operation")
+async def add_operation(account_id: int, new_operation: dict, current_user: TokenData = Depends(get_current_user)):
+    # Perform additional authorization checks if needed
+    # For example, check if the user has permission to add an operation to this bank account
+
+    # Create an instance of the BankAccount
+    bank_account = BankAccount.from_db(account_id, balance=0, currency="USD", userID=current_user.username)
+
+    # Add a new operation using the BankAccount method
+    success = bank_account.add_new_operation(new_operation)
+
+    if success:
+        return {"message": "Operation added successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to add operation")
     
-# #file path
-# @app.get("/foo3/{filepath: path}")
-# async def read_item(filepath: str):
-#     return {"filepath": filepath}
-
-# #Querry tools
-# #
-
-# fake_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
-
-# #get with args
-# @app.get("/foo4/")
-# async def read_item(skip: int = 0, limit: int = 10):
-#     return fake_db[skip : skip + limit]
-
-# #get with additional params
-# @app.get("/foo5/{item_id}")
-# async def read_item(item_id: str, q: str | None = None):
-#     if q:
-#         return {"item_id": item_id, "q": q}
-#     return {"item_id": item_id.capitalize()}
-
-# ##Best practice for RESTful API design is that path params
-# # are used to identify a specific resource or resources,
-# # while query parameters are used to sort/filter those resources.
-
-# #few path and querry params in a row
-# @app.get("/users/{user_id}/items/{item_id}")
-# async def read_user_item(
-#     user_id: int, item_id: str, q: str | None = None, short: bool = False):
-#     item = {"item_id": item_id, "owner_id": user_id}
-#     if q:
-#         item.update({"q": q})
-#     if not short:
-#         item.update(
-#             {"description": "This is an amazing item that has a long description"}
-#         )
-#     return item
-
+    

@@ -1,0 +1,3 @@
+INFO:root:User with id 3 found successfully 3
+INFO:root:User with id (21, 'crazycat1234', 'password1234', 'a@dvfu.ru', '89145212222', 'Oleg', 'None', 'None') found successfully [(21, 'crazycat1234', 'password1234', 'a@dvfu.ru', '89145212222', 'Oleg', 'None', 'None')]
+INFO:root:User with id 21 found successfully 21

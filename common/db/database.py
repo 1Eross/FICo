@@ -34,6 +34,31 @@ class dataBase:
                 conn.close()
             if cur:
                 cur.close()
+                
+    @staticmethod #работает
+    def get_id_by_login (login: str) -> int: #поиск пользователя в таблице
+        conn = None
+        cur = None
+        try:
+            conn = psycopg2.connect(
+                database=DB_NAME,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                host=DB_HOST,
+                port=DB_PORT)
+            cur = conn.cursor()
+            cur.execute(f"SELECT useraccount_id FROM user_account WHERE user_login = '{login}'")
+            result = cur.fetchall()
+            return result[0][0]
+        except psycopg2.Error as e:
+            logging.error(f"user search error: {e}")
+            print(f"error: {e}")
+            return None
+        finally:    
+            if conn:
+                conn.close()
+            if cur:
+                cur.close()
     
     @staticmethod #работает
     def find_user_in_database_by_login (login: str) -> bool: #если есть в базе - true, если нет - false
