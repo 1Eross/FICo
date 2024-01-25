@@ -19,7 +19,7 @@ const Form = ({addCard}) => {
             const token = await AsyncStorage.getItem('jwt_token');
             
             // Отправляем запрос на сервер, передавая токен в заголовках
-            const response = await axios.get('http://ваш_сервер/путь_к_загрузке_карточек', {
+            const response = await axios.get('PATH', {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -57,7 +57,7 @@ const getAllBankAccounts = async () => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     console.log("Token %s", token)
     // Выполнение запроса на получение всех bank_account
-    const response = await axios.get<BankAccount[]>('http://192.168.132.81:8080/bank_accounts');
+    const response = await axios.get<BankAccount[]>('http://192.168.134.81:8080/bank_accounts');
 
     // Вывод bank_account в консоль
     console.log('Bank Accounts:', response.data);
@@ -71,83 +71,83 @@ getAllBankAccounts();
     
     
     return (
+//         <SafeAreaView>
+//       <Formik
+//         initialValues={{ number: '', category: '', data: '' }}
+//         onSubmit={(values, action) => {
+//           addCard(values);
+//           action.resetForm();
+//           // Вызываем функцию получения всех bank_account при нажатии на кнопку
+//           getAllBankAccounts();
+//         }}
+//       >
+//         {(props) => (
+//           <View style={styles.ViewMain}>
+//             <View style={styles.View}>
+//               {/* Остальные компоненты формы */}
+//             </View>
+//             <TouchableOpacity onPress={props.handleSubmit}>
+//               <Image style={styles.buttonImage} source={require('../assets/okButton.png')} />
+//             </TouchableOpacity>
+//           </View>
+//         )}
+//       </Formik>
+//     </SafeAreaView>
+//   );
+// };
         <SafeAreaView>
-      <Formik
-        initialValues={{ number: '', category: '', data: '' }}
-        onSubmit={(values, action) => {
-          addCard(values);
-          action.resetForm();
-          // Вызываем функцию получения всех bank_account при нажатии на кнопку
-          getAllBankAccounts();
-        }}
-      >
-        {(props) => (
-          <View style={styles.ViewMain}>
-            <View style={styles.View}>
-              {/* Остальные компоненты формы */}
-            </View>
-            <TouchableOpacity onPress={props.handleSubmit}>
-              <Image style={styles.buttonImage} source={require('../assets/okButton.png')} />
-            </TouchableOpacity>
-          </View>
-        )}
-      </Formik>
-    </SafeAreaView>
-  );
-};
-        // <SafeAreaView>
-        //     <Formik initialValues={{number: '', category: '', data: ''}} onSubmit={(values, action) => {addCard(values), action.resetForm}}>
-        //         {(props) => (
-        //             <View style={styles.ViewMain}>
-        //                 <View style={styles.View}>
-        //                     <TextInput
-        //                         style={styles.input}
-        //                         value={props.values.number}
-        //                         keyboardType={'numeric'}
-        //                         placeholder='Введите сумму'
-        //                         placeholderTextColor='#664efe'
-        //                         onChangeText={props.handleChange('number')}>
-        //                     </TextInput> 
-        //                     <Picker style={styles.picker} selectedValue={props.values.category} onValueChange={props.handleChange('category')}>
-        //                         <Picker.Item label="" value="" />
-        //                         <Picker.Item label="Учёба" value="Учёба" />
-        //                         <Picker.Item label="Семья" value="Семья" />
-        //                         <Picker.Item label="Здоровье" value="Здоровье" />
-        //                         <Picker.Item label="Продукты" value="Продукты" />
-        //                         <Picker.Item label="Кафе" value="Кафе" />
-        //                         <Picker.Item label="Досуг" value="Досуг" />
-        //                         <Picker.Item label="Транспорт" value="Транспорт" />
-        //                         <Picker.Item label="Подарки" value="Подарки" />
-        //                         <Picker.Item label="Покупки" value="Покупки" />
-        //                     </Picker>
-        //                     {/* <MaskedInput
-        //                         style={styles.input}
-        //                         mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
-        //                         placeholder='YYYY-MM-DD'
-        //                         value={props.values.data}
-        //                         onChange={props.handleChange('data')}>
-        //                     </MaskedInput> */}
-        //                     <TextInput
-        //                         style={styles.input}
-        //                         value={props.values.data}
-        //                         keyboardType={'numeric'}
-        //                         placeholder='YYYY-MM-DD'
-        //                         placeholderTextColor='#664efe'
-        //                         onChangeText={props.handleChange('data')}>
-        //                     </TextInput>
-        //                 </View>
-        //                     <TouchableOpacity onPress={props.handleSubmit}>
-        //                         <Image 
-        //                             style={styles.buttonImage} 
-        //                             source={require('../assets/okButton.png')}
-        //                         />
-        //                     </TouchableOpacity>
-        //             </View>
-        //         )}
-        //     </Formik>
-        // </SafeAreaView>
-//     )
-// }
+            <Formik initialValues={{number: '', category: '', data: ''}} onSubmit={(values, action) => {addCard(values), action.resetForm}}>
+                {(props) => (
+                    <View style={styles.ViewMain}>
+                        <View style={styles.View}>
+                            <TextInput
+                                style={styles.input}
+                                value={props.values.number}
+                                keyboardType={'numeric'}
+                                placeholder='Введите сумму'
+                                placeholderTextColor='#664efe'
+                                onChangeText={props.handleChange('number')}>
+                            </TextInput> 
+                            <Picker style={styles.picker} selectedValue={props.values.category} onValueChange={props.handleChange('category')}>
+                                <Picker.Item label="" value="" />
+                                <Picker.Item label="Учёба" value="Учёба" />
+                                <Picker.Item label="Семья" value="Семья" />
+                                <Picker.Item label="Здоровье" value="Здоровье" />
+                                <Picker.Item label="Продукты" value="Продукты" />
+                                <Picker.Item label="Кафе" value="Кафе" />
+                                <Picker.Item label="Досуг" value="Досуг" />
+                                <Picker.Item label="Транспорт" value="Транспорт" />
+                                <Picker.Item label="Подарки" value="Подарки" />
+                                <Picker.Item label="Покупки" value="Покупки" />
+                            </Picker>
+                            {/* <MaskedInput
+                                style={styles.input}
+                                mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
+                                placeholder='YYYY-MM-DD'
+                                value={props.values.data}
+                                onChange={props.handleChange('data')}>
+                            </MaskedInput> */}
+                            <TextInput
+                                style={styles.input}
+                                value={props.values.data}
+                                keyboardType={'numeric'}
+                                placeholder='YYYY-MM-DD'
+                                placeholderTextColor='#664efe'
+                                onChangeText={props.handleChange('data')}>
+                            </TextInput>
+                        </View>
+                            <TouchableOpacity onPress={props.handleSubmit}>
+                                <Image 
+                                    style={styles.buttonImage} 
+                                    source={require('../assets/okButton.png')}
+                                />
+                            </TouchableOpacity>
+                    </View>
+                )}
+            </Formik>
+        </SafeAreaView>
+    )
+}
 
 const styles = StyleSheet.create({
     ViewMain: {

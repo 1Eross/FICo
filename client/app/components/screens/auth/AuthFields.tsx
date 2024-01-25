@@ -44,7 +44,7 @@ const AuthFields: FC<AuthFieldsProps> = ({ control, isRegistration }) => {
         return;
       }
 
-      const url = isRegistration ? 'http://192.168.132.81:8080/reg' : 'http://192.168.132.81:8080/token';
+      const url = isRegistration ? 'http://192.168.134.81:8080/reg' : 'http://192.168.134.81:8080/token';
   
       const requestData: AuthRequestModel = {
         login: data.login,
